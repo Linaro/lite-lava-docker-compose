@@ -2,12 +2,54 @@ version: "3.4"
 services:
   db:
     image: postgres:11.1
+    container_name: lava-server-db
     environment:
       POSTGRES_USER: lavaserver
       POSTGRES_PASSWORD: lavaserverdbpass
     volumes:
     - db-data:/var/lib/postgresql/data
 
+  lava-server:
+    container_name: lava-server
+    image: lava-server-test
+    volumes:
+    - server-joboutput:/var/lib/lava-server/default/media/job-output
+    - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf
+    depends_on:
+    - db
+    environment:
+      SERVICES: "lava-server-gunicorn apache2"
+    ports:
+    - 80:80
+
+  lava-master:
+    container_name: lava-master
+    image: lava-server-test
+    volumes:
+    - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf
+    - ./overlays/lava-server/etc/lava-server/lava-master:/etc/lava-server/lava-master
+    depends_on:
+    - db
+    environment:
+      SERVICES: "lava-master"
+    ports:
+    - 5556:5556
+
+  lava-logs:
+    container_name: lava-logs
+    image: lava-server-test
+    volumes:
+    - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf
+    - ./overlays/lava-server/etc/lava-server/lava-logs:/etc/lava-server/lava-logs
+    depends_on:
+    - db
+    environment:
+      SERVICES: "lava-logs"
+    ports:
+    - 5555:5555
+
 volumes:
   db-data:
     name: lava-server-pgdata
+  server-joboutput:
+    name: lava-server-joboutput
