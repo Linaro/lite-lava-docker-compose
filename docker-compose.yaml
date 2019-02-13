@@ -1,0 +1,13 @@
+version: "3.4"
+services:
+  db:
+    image: postgres:11.1
+    environment:
+      POSTGRES_USER: lavaserver
+      POSTGRES_PASSWORD: lavaserverdbpass
+    volumes:
+    - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
+    name: lava-server-pgdata
