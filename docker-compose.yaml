@@ -9,24 +9,26 @@ services:
     volumes:
     - db-data:/var/lib/postgresql/data
 
-  lava-server:
-    container_name: lava-server
+  lava-logs:
+    container_name: lava-logs
     image: lava-server-test
     volumes:
-    - server-joboutput:/var/lib/lava-server/default/media/job-output
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf
+    - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf
+    - ./overlays/lava-server/etc/lava-server/lava-logs:/etc/lava-server/lava-logs
     depends_on:
     - db
     environment:
-      SERVICES: "lava-server-gunicorn apache2"
+      SERVICES: "lava-logs"
     ports:
-    - 80:80
+    - 5555:5555
 
   lava-master:
     container_name: lava-master
     image: lava-server-test
     volumes:
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf
+    - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf
     - ./overlays/lava-server/etc/lava-server/lava-master:/etc/lava-server/lava-master
     depends_on:
     - db
@@ -35,18 +37,30 @@ services:
     ports:
     - 5556:5556
 
-  lava-logs:
-    container_name: lava-logs
+  lava-publisher:
+    container_name: lava-publisher
     image: lava-server-test
     volumes:
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf
-    - ./overlays/lava-server/etc/lava-server/lava-logs:/etc/lava-server/lava-logs
+    - ./overlays/lava-publisher/etc/lava-server/settings.conf:/etc/lava-server/settings.conf
+    environment:
+      SERVICES: "lava-publisher"
+    ports:
+    - 5500:5500
+
+  lava-server:
+    container_name: lava-server
+    image: lava-server-test
+    volumes:
+    - server-joboutput:/var/lib/lava-server/default/media/job-output
+    - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf
+    - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf
     depends_on:
     - db
     environment:
-      SERVICES: "lava-logs"
+      SERVICES: "lava-server-gunicorn apache2"
     ports:
-    - 5555:5555
+    - 80:80
 
 volumes:
   db-data:
