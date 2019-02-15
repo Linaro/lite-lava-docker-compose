@@ -8,6 +8,7 @@ services:
       POSTGRES_PASSWORD: lavaserverdbpass
     volumes:
     - db-data:/var/lib/postgresql/data
+    restart: always
 
   lava-logs:
     container_name: lava-logs
@@ -22,6 +23,7 @@ services:
       SERVICES: "lava-logs"
     ports:
     - 5555:5555
+    restart: always
 
   lava-master:
     container_name: lava-master
@@ -36,6 +38,7 @@ services:
       SERVICES: "lava-master"
     ports:
     - 5556:5556
+    restart: always
 
   lava-publisher:
     container_name: lava-publisher
@@ -47,6 +50,7 @@ services:
       SERVICES: "lava-publisher"
     ports:
     - 5500:5500
+    restart: always
 
   lava-server:
     container_name: lava-server
@@ -58,9 +62,22 @@ services:
     depends_on:
     - db
     environment:
-      SERVICES: "lava-server-gunicorn apache2"
+      SERVICES: "lava-server-gunicorn"
+      BIND: "--bind lava-server:8000"
+    restart: always
+
+  apache2:
+    container_name: apache2
+    image: lava-server-test
+    volumes:
+    - ./overlays/lava-server/etc/apache2/sites-available/lava-server.conf:/etc/apache2/sites-available/lava-server.conf
+    depends_on:
+    - lava-server
+    environment:
+      SERVICES: "apache2"
     ports:
     - 80:80
+    restart: always
 
 volumes:
   db-data:
