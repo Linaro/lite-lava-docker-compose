@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   db:
-    image: postgres:11.1
+    image: postgres:11.2-alpine
     container_name: lava-server-db
     environment:
       POSTGRES_USER: lavaserver
