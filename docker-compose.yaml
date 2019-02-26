@@ -63,7 +63,7 @@ services:
     depends_on:
     - db
     environment:
-      SERVICES: "lava-server-gunicorn"
+      SERVICES: "gunicorn"
       BIND: "--bind lava-server:8000"
     restart: unless-stopped
 
