@@ -12,7 +12,7 @@ services:
 
   lava-logs:
     container_name: lava-logs
-    image: hub.lavasoftware.org/lava/lava/lava-server:2019.01.0059.gb42520584-master
+    image: hub.lavasoftware.org/lava/lava/lava-server:2019.01.0078.gb0cf8d779-master
     volumes:
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf
@@ -28,7 +28,7 @@ services:
 
   lava-master:
     container_name: lava-master
-    image: hub.lavasoftware.org/lava/lava/lava-server:2019.01.0059.gb42520584-master
+    image: hub.lavasoftware.org/lava/lava/lava-server:2019.01.0078.gb0cf8d779-master
     volumes:
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf
@@ -43,7 +43,7 @@ services:
 
   lava-publisher:
     container_name: lava-publisher
-    image: hub.lavasoftware.org/lava/lava/lava-server:2019.01.0059.gb42520584-master
+    image: hub.lavasoftware.org/lava/lava/lava-server:2019.01.0078.gb0cf8d779-master
     volumes:
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf
     - ./overlays/lava-publisher/etc/lava-server/settings.conf:/etc/lava-server/settings.conf
@@ -55,7 +55,7 @@ services:
 
   lava-server:
     container_name: lava-server
-    image: hub.lavasoftware.org/lava/lava/lava-server:2019.01.0059.gb42520584-master
+    image: hub.lavasoftware.org/lava/lava/lava-server:2019.01.0078.gb0cf8d779-master
     volumes:
     - server-joboutput:/var/lib/lava-server/default/media/job-output
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf
@@ -69,7 +69,7 @@ services:
 
   apache2:
     container_name: apache2
-    image: hub.lavasoftware.org/lava/lava/lava-server:2019.01.0059.gb42520584-master
+    image: hub.lavasoftware.org/lava/lava/lava-server:2019.01.0078.gb0cf8d779-master
     volumes:
     - ./overlays/lava-server/etc/apache2/sites-available/lava-server.conf:/etc/apache2/sites-available/lava-server.conf
     depends_on:
