@@ -1,8 +1,8 @@
 docker-compose
 ==============
 
-docker-compose file to setup an instance of **lava-server** from scratch.
-In this setup, every service will be running in a separate container.
+docker-compose file to setup an instance of **lava-server** and **lava-dispatcher**
+from scratch. In this setup, every service will be running in a separate container.
 
 Usage
 =====

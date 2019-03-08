@@ -85,6 +85,22 @@ services:
     - 80:80
     restart: unless-stopped
 
+  lava-dispatcher:
+    container_name: lava-dispatcher
+    image: lavasoftware/lava-dispatcher:2019.03
+    devices:
+    - /dev/kvm # needed for QEMU
+    - /dev/net/tun # needed for QEMU
+    cap_add:
+    - NET_ADMIN # needed for QEMU
+    environment:
+      DISPATCHER_HOSTNAME: "--hostname=lava-dispatcher"
+      LOGGER_URL: "tcp://lava-logs:5555"
+      MASTER_URL: "tcp://lava-master:5556"
+    volumes:
+    - /boot:/boot:ro
+    - /lib/modules:/lib/modules:ro
+
 volumes:
   db-data:
     name: lava-server-pgdata
