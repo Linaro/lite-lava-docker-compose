@@ -14,7 +14,7 @@ services:
     container_name: lava-logs
     image: lavasoftware/lava-server:2019.03
     volumes:
-    - server-joboutput:/var/lib/lava-server/default/media/job-output
+    - joboutput:/var/lib/lava-server/default/media/job-output
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
     - ./overlays/lava-server/etc/lava-server/lava-logs:/etc/lava-server/lava-logs:ro
@@ -31,6 +31,8 @@ services:
     container_name: lava-master
     image: lavasoftware/lava-server:2019.03
     volumes:
+    - devices:/etc/lava-server/dispatcher-config/devices:ro
+    - health-checks:/etc/lava-server/dispatcher-config/health-checks:ro
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
     - ./overlays/lava-server/etc/lava-server/lava-master:/etc/lava-server/lava-master:ro
@@ -58,7 +60,9 @@ services:
     container_name: lava-server
     image: lavasoftware/lava-server:2019.03
     volumes:
-    - server-joboutput:/var/lib/lava-server/default/media/job-output
+    - devices:/etc/lava-server/dispatcher-config/devices
+    - health-checks:/etc/lava-server/dispatcher-config/health-checks
+    - joboutput:/var/lib/lava-server/default/media/job-output
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
     depends_on:
@@ -84,5 +88,9 @@ services:
 volumes:
   db-data:
     name: lava-server-pgdata
-  server-joboutput:
+  devices:
+    name: lava-server-devices
+  health-checks:
+    name: lava-server-health-checks
+  joboutput:
     name: lava-server-joboutput
