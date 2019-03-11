@@ -14,6 +14,7 @@ services:
     container_name: lava-logs
     image: lavasoftware/lava-server:2019.03
     volumes:
+    - server-joboutput:/var/lib/lava-server/default/media/job-output
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
     - ./overlays/lava-server/etc/lava-server/lava-logs:/etc/lava-server/lava-logs:ro
