@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   db:
-    image: postgres:11.2-alpine
+    image: ${DC_POSTGRES_IMAGE}
     container_name: lava-server-db
     environment:
       POSTGRES_USER: lavaserver
@@ -12,7 +12,7 @@ services:
 
   lava-logs:
     container_name: lava-logs
-    image: lavasoftware/lava-server:2019.03
+    image: ${DC_SERVER_IMAGE}
     volumes:
     - joboutput:/var/lib/lava-server/default/media/job-output
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
@@ -29,7 +29,7 @@ services:
 
   lava-master:
     container_name: lava-master
-    image: lavasoftware/lava-server:2019.03
+    image: ${DC_SERVER_IMAGE}
     volumes:
     - devices:/etc/lava-server/dispatcher-config/devices:ro
     - health-checks:/etc/lava-server/dispatcher-config/health-checks:ro
@@ -46,7 +46,7 @@ services:
 
   lava-publisher:
     container_name: lava-publisher
-    image: lavasoftware/lava-server:2019.03
+    image: ${DC_SERVER_IMAGE}
     volumes:
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
     - ./overlays/lava-publisher/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
@@ -58,7 +58,7 @@ services:
 
   lava-server:
     container_name: lava-server
-    image: lavasoftware/lava-server:2019.03
+    image: ${DC_SERVER_IMAGE}
     volumes:
     - devices:/etc/lava-server/dispatcher-config/devices
     - health-checks:/etc/lava-server/dispatcher-config/health-checks
@@ -74,7 +74,7 @@ services:
 
   apache2:
     container_name: apache2
-    image: lavasoftware/lava-server:2019.03
+    image: ${DC_SERVER_IMAGE}
     volumes:
     - ./overlays/lava-server/etc/apache2/sites-available/lava-server.conf:/etc/apache2/sites-available/lava-server.conf:ro
     depends_on:
@@ -87,7 +87,7 @@ services:
 
   lava-dispatcher:
     container_name: lava-dispatcher
-    image: lavasoftware/lava-dispatcher:2019.03
+    image: ${DC_DISPATCHER_IMAGE}
     devices:
     - /dev/kvm # needed for QEMU
     - /dev/net/tun # needed for QEMU
