@@ -93,6 +93,7 @@ services:
     - /dev/net/tun # needed for QEMU
     cap_add:
     - NET_ADMIN # needed for QEMU
+    - SYS_ADMIN # needed for usb mass storage
     environment:
       DISPATCHER_HOSTNAME: "--hostname=lava-dispatcher"
       LOGGER_URL: "tcp://lava-logs:5555"
