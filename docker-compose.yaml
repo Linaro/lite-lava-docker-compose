@@ -36,6 +36,7 @@ services:
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
     - ./overlays/lava-server/etc/lava-server/lava-master:/etc/lava-server/lava-master:ro
+    - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:ro
     depends_on:
     - db
     environment:
@@ -65,6 +66,7 @@ services:
     - joboutput:/var/lib/lava-server/default/media/job-output
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
+    - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:ro
     depends_on:
     - db
     environment:
