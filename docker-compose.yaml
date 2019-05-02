@@ -87,7 +87,11 @@ services:
 
   lava-dispatcher:
     container_name: lava-dispatcher
-    image: ${DC_DISPATCHER_IMAGE}
+    #image: ${DC_DISPATCHER_IMAGE}
+    build:
+      context: ./lite-lava-dispatcher
+      args:
+        DC_DISPATCHER_IMAGE: ${DC_DISPATCHER_IMAGE}
     devices:
     - /dev/kvm # needed for QEMU
     - /dev/net/tun # needed for QEMU
