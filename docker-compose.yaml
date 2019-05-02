@@ -109,6 +109,13 @@ services:
     - /boot:/boot:ro
     - /lib/modules:/lib/modules:ro
 
+  ser2net:
+    container_name: lava-ser2net
+    build:
+      context: ./ser2net
+    volumes:
+      - ./ser2net/ser2net.conf:/etc/ser2net.conf
+
 volumes:
   db-data:
     name: lava-server-pgdata
