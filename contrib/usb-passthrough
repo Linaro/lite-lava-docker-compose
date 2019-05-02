@@ -1,0 +1,122 @@
+#!/usr/bin/python3
+
+#  Copyright 2019 Linaro Limited
+#  Author: Dave Pigott <dave.pigott@linaro.org>
+#  Author: Kumar Gala <kumar.gala@linaro.org>
+
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#
+#  USB device passthrough for docker containers
+
+import argparse
+import os
+import sys
+import stat
+import docker
+
+# Example of what a udev rule looks like for using this script
+#
+# ACTION=="add", ENV{ID_SERIAL_SHORT}=="E00A1029", RUN+="/usr/local/bin/usb-passthrough -a -d %E{ID_SERIAL_SHORT} -i lava-dispatcher"
+
+def pass_device_into_container(instance, dev_type, major, minor, node, serial_no, subsys, links):
+    client = docker.from_env()
+
+    container = client.containers.get(instance)
+
+    allow_devices = open("/sys/fs/cgroup/devices/docker/%s/devices.allow" % container.id, "w")
+    allow_devices.write("%s %s:%s rwm\n" % (dev_type, major, minor))
+    allow_devices.close()
+    create_dev_cmd = "sh -c '[ ! -e " + node + " ] " + \
+                     "&& mkdir -p $(dirname " + node + \
+                     ") && mknod " + node + " " + dev_type + \
+                     " " + str(major) + " " + str(minor) + "'"
+    container.exec_run(create_dev_cmd)
+
+    for link in links.split():
+        link_cmd = "sh -c 'mkdir -p $(dirname " + link + ");" + \
+                "ln -f -s " + node + " " + link + "'"
+        container.exec_run(link_cmd)
+
+    udev_file_name = "/etc/udev/rules.d/lava-%s-%s-%s" % (instance, serial_no, subsys)
+    if ('ID_USB_INTERFACE_NUM' in os.environ):
+        udev_file_name += "-if%s" % os.environ['ID_USB_INTERFACE_NUM']
+    udev_file_name += ".rules"
+
+    udev_rule = open(udev_file_name, "w")
+
+    udev_rule.write('ACTION=="remove",ENV{DEVNAME}=="' + node)
+    udev_rule.write('",RUN+="' + sys.argv[0])
+    udev_rule.write(' -d ' + serial_no)
+    udev_rule.write(' -i ' + instance)
+    udev_rule.write('"\n')
+
+    udev_rule.close()
+
+def remove_device_from_container(instance, dev_type, major, minor, node, serial_no, subsys, links):
+    client = docker.from_env()
+
+    container = client.containers.get(instance)
+
+    allow_devices = open("/sys/fs/cgroup/devices/docker/%s/devices.deny" % container.id, "w")
+    allow_devices.write("%s %s:%s rwm\n" % (dev_type, major, minor))
+    allow_devices.close()
+    create_dev_cmd = "rm " + node
+    container.exec_run(create_dev_cmd)
+
+    for link in links.split():
+        link_cmd = "rm " + link
+        container.exec_run(link_cmd)
+
+    udev_file_name = "/etc/udev/rules.d/lava-%s-%s-%s" % (instance, serial_no, subsys)
+    if ('ID_USB_INTERFACE_NUM' in os.environ):
+        udev_file_name += "-if%s" % os.environ['ID_USB_INTERFACE_NUM']
+    udev_file_name += ".rules"
+
+    os.remove(udev_file_name)
+
+def main():
+    parser = argparse.ArgumentParser(description='USB device passthrough for docker containers', add_help=False)
+
+    parser.add_argument("-d", "--device_serial", type=str, required=True,
+                        help="Devices serial number")
+    parser.add_argument("-i", "--instance", type=str, required=True,
+                        help="Docker instance")
+    parser.add_argument("-a", "--add", action="store_true",
+                        help="Add device")
+
+    options = parser.parse_args()
+
+    subsys = os.environ['SUBSYSTEM']
+    links = ""
+    if ('DEVLINKS' in os.environ):
+        links = os.environ['DEVLINKS']
+
+    dev_type = "c"
+    if (subsys == "block"):
+        dev_type = "b"
+
+    major = os.environ['MAJOR']
+    minor = os.environ['MINOR']
+    device_node = os.environ['DEVNAME']
+
+    if (options.add):
+        pass_device_into_container(options.instance, dev_type, major, minor, device_node, options.device_serial, subsys, links)
+    else:
+        remove_device_from_container(options.instance, dev_type, major, minor, device_node, options.device_serial, subsys, links)
+
+
+if __name__ == '__main__':
+    main()
