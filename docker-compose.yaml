@@ -93,7 +93,7 @@ services:
       args:
         DC_DISPATCHER_IMAGE: ${DC_DISPATCHER_IMAGE}
     devices:
-    - /dev/kvm # needed for QEMU
+#    - /dev/kvm # needed for QEMU
     - /dev/net/tun # needed for QEMU
     security_opt:
     - apparmor:unconfined # needed for usb mass storage
