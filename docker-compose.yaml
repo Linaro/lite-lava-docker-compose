@@ -93,7 +93,7 @@ services:
     - lava-dispatcher-nfs
     hostname: worker0
     devices:
-    - /dev/kvm # needed for QEMU
+#    - /dev/kvm # needed for QEMU
     - /dev/net/tun # needed for QEMU
     security_opt:
     - apparmor:unconfined # needed for usb mass storage
