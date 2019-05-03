@@ -91,6 +91,8 @@ services:
     devices:
     - /dev/kvm # needed for QEMU
     - /dev/net/tun # needed for QEMU
+    security_opt:
+    - apparmor:unconfined # needed for usb mass storage
     cap_add:
     - NET_ADMIN # needed for QEMU
     - SYS_ADMIN # needed for usb mass storage
