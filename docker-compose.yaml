@@ -110,6 +110,7 @@ services:
     - /run/udev/control:/run/udev/control:ro # libudev expects it for udev events
     - /boot:/boot:ro
     - /lib/modules:/lib/modules:ro
+    - ./overlays/lava-dispatcher/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/pyocd.py:/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/pyocd.py:ro
       # Example for development
       # If you wanted to point to a local git checkout of lava for development
       # of lava_dispatcher, you can uncomment out the lines below and
