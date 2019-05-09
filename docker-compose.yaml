@@ -114,7 +114,9 @@ services:
     build:
       context: ./ser2net
     volumes:
-      - ./ser2net/ser2net.conf:/etc/ser2net.conf
+    - type: bind
+      source: ./ser2net/ser2net.conf
+      target: /etc/ser2net.conf
 
 volumes:
   db-data:
