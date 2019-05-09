@@ -151,6 +151,9 @@ services:
     volumes:
       - '/dev/serial:/dev/serial' # required for serial adapters
       - '/dev:/dev'
+      - type: bind
+        source: ./ser2net/ser2net.conf
+        target: /etc/ser2net.conf
     devices: []
     ports:
       - 7101:7101
