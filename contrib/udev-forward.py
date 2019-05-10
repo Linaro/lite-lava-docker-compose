@@ -103,6 +103,7 @@ def errcheck(ret, func, args):
         raise OSError(e, os.strerror(e))
 
 def sendMsgThread():
+    nsfd = open(netns_file, "r")
     libc = CDLL('libc.so.6', use_errno=True)
     libc.setns.errcheck = errcheck
     libc.setns(nsfd.fileno(), CLONE_NEWNET)
@@ -133,12 +134,11 @@ def udev_event_callback(dev):
 
 def start_up_thread(instance):
     container = client.containers.get(instance)
+    global netns_file
     netns_file = container.attrs['NetworkSettings']['SandboxKey']
     if options.debug:
         print("DBG: Container[%s] netns file %s" % (instance, netns_file))
-    global nsfd
     global t
-    nsfd = open(netns_file, "r")
     t = threading.Thread(name=instance, target=sendMsgThread)
     t.start()
 
