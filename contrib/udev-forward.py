@@ -122,10 +122,25 @@ def sendMsgThread():
             except ConnectionRefusedError:
                 pass
 
+        if work_type == "DOCKER":
+            nsfd.close()
+            break
+
 def udev_event_callback(dev):
     if options.debug:
         print('background event {0.action}: {0.device_path}'.format(dev))
     workqueue.put(("PKT", BuildPacket(dev)))
+
+def start_up_thread(instance):
+    container = client.containers.get(instance)
+    netns_file = container.attrs['NetworkSettings']['SandboxKey']
+    if options.debug:
+        print("DBG: Container[%s] netns file %s" % (instance, netns_file))
+    global nsfd
+    global t
+    nsfd = open(netns_file, "r")
+    t = threading.Thread(name=instance, target=sendMsgThread)
+    t.start()
 
 def main():
     parser = argparse.ArgumentParser(description='USB device passthrough for docker containers', add_help=False)
@@ -147,18 +162,33 @@ def main():
 
     observer.start()
 
+    instance = options.instance
+
+    global client
+
     client = docker.from_env()
-    container = client.containers.get(options.instance)
-    netns_file = container.attrs['NetworkSettings']['SandboxKey']
 
-    if options.debug:
-        print("DBG: Container netns file %s" % netns_file)
+    # If the container is running get the namespace file (SandboxKey)
+    # and startup the sendMsgThread
+    f = {'name': [ instance ], 'status': 'running'}
+    if client.containers.list(filters=f):
+        start_up_thread(instance)
 
-    global nsfd
-    nsfd = open(netns_file, "r")
-
-    threading.Thread(target=sendMsgThread).start()
-
+    # Watch for docker events to startup or shutdown a new sendMsgThread
+    f = {'type': 'container', 'event': ['start', 'stop'], 'container': [ instance ]}
+    try:
+        for event in client.events(decode=True, filters=f):
+            instance = event['Actor']['Attributes']['name']
+            if options.debug:
+                print("DOCKER: %s for %s" % (event['Action'], instance))
+            if event['Action'] == 'start':
+                start_up_thread(instance)
+            if event['Action'] == 'stop':
+                workqueue.put(("DOCKER", event['Action']))
+                t.join()
+    except KeyboardInterrupt:
+        if t.is_alive():
+            workqueue.put(("DOCKER", 'stop'))
 
 
 if __name__ == '__main__':
