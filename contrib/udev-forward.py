@@ -179,14 +179,14 @@ def main():
     f = {'type': 'container', 'event': ['start', 'stop'], 'container': options.names }
     try:
         for event in client.events(decode=True, filters=f):
-            instance = event['Actor']['Attributes']['name']
+            name = event['Actor']['Attributes']['name']
             if options.debug:
-                print("DOCKER: %s for %s" % (event['Action'], instance))
+                print("DOCKER: %s for %s" % (event['Action'], name))
             if event['Action'] == 'start':
-                start_up_thread(instance)
+                start_up_thread(name)
             if event['Action'] == 'stop':
-                containers[instance].wq.put(("DOCKER", event['Action']))
-                containers[instance].thread.join()
+                containers[name].wq.put(("DOCKER", event['Action']))
+                containers[name].thread.join()
     except KeyboardInterrupt:
         for i in containers:
             if containers[i].thread.is_alive():
