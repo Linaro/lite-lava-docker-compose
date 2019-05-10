@@ -149,6 +149,14 @@ def main():
     global options
     options = parser.parse_args()
 
+    context = pyudev.Context()
+    if options.debug:
+        context.log_priority = syslog.LOG_DEBUG
+    monitor = pyudev.Monitor.from_netlink(context)
+    observer = pyudev.MonitorObserver(monitor, callback=udev_event_callback, name='monitor-observer')
+
+    observer.start()
+
     client = docker.from_env()
     container = client.containers.get(options.instance)
     netns_file = container.attrs['NetworkSettings']['SandboxKey']
@@ -160,14 +168,6 @@ def main():
     nsfd = open(netns_file, "r")
 
     threading.Thread(target=sendMsgThread).start()
-
-    context = pyudev.Context()
-    if options.debug:
-        context.log_priority = syslog.LOG_DEBUG
-    monitor = pyudev.Monitor.from_netlink(context)
-    observer = pyudev.MonitorObserver(monitor, callback=udev_event_callback, name='monitor-observer')
-
-    observer.start()
 
 
 
