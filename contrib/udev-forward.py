@@ -40,9 +40,14 @@ UDEV_MONITOR_UDEV  = 2
 CLONE_NEWNET = 0x40000000
 UDEV_MONITOR_MAGIC = 0xFEEDCAFE
 
-workqueue = queue.Queue()
-
 hasher = pyhash.murmur2_32()
+
+containers = {}
+
+class containersClass:
+    def __init__(self):
+        self.thread = threading.Thread()
+        self.wq = queue.Queue()
 
 def bloomHash(tag):
     bits = 0
@@ -98,7 +103,7 @@ def errcheck(ret, func, args):
         e = get_errno()
         raise OSError(e, os.strerror(e))
 
-def sendMsgThread():
+def sendMsgThread(inst, netns_file):
     nsfd = open(netns_file, "r")
     libc = CDLL('libc.so.6', use_errno=True)
     libc.setns.errcheck = errcheck
@@ -108,7 +113,7 @@ def sendMsgThread():
         print(sendfd)
 
     while True:
-        (work_type, pkt) = workqueue.get()
+        (work_type, pkt) = containers[inst].wq.get()
 
         if work_type == "PKT":
             # Older kernels (like 4.15 on Ubuntu 18.04) return ECONNREFUSED
@@ -126,23 +131,24 @@ def sendMsgThread():
 def udev_event_callback(dev):
     if options.debug:
         print('background event {0.action}: {0.device_path}'.format(dev))
-    workqueue.put(("PKT", BuildPacket(dev)))
+    for i in containers:
+        if containers[i].thread.is_alive():
+            containers[i].wq.put(("PKT", BuildPacket(dev)))
 
-def start_up_thread(instance):
-    container = client.containers.get(instance)
-    global netns_file
-    netns_file = container.attrs['NetworkSettings']['SandboxKey']
+def start_up_thread(name):
+    container = client.containers.get(name)
+    ns_filename = container.attrs['NetworkSettings']['SandboxKey']
     if options.debug:
-        print("DBG: Container[%s] netns file %s" % (instance, netns_file))
-    global t
-    t = threading.Thread(name=instance, target=sendMsgThread)
-    t.start()
+        print("DBG: Container[%s] netns file %s" % (name, ns_filename))
+    containers[name] = containersClass()
+    containers[name].thread = threading.Thread(name=name, target=sendMsgThread, args=(name, ns_filename))
+    containers[name].thread.start()
 
 def main():
     parser = argparse.ArgumentParser(description='USB device passthrough for docker containers', add_help=False)
 
-    parser.add_argument("-i", "--instance", type=str, required=True,
-                        help="Docker instance")
+    parser.add_argument("-i", "--instance", type=str, required=True, action='append',
+                        help="Docker instance", dest="names")
 
     parser.add_argument("-d", "--debug", action="store_true",
                         help="Enable Debug Loggin")
@@ -158,20 +164,19 @@ def main():
 
     observer.start()
 
-    instance = options.instance
-
     global client
 
     client = docker.from_env()
 
     # If the container is running get the namespace file (SandboxKey)
     # and startup the sendMsgThread
-    f = {'name': [ instance ], 'status': 'running'}
+    f = {'name': options.names, 'status': 'running'}
     if client.containers.list(filters=f):
-        start_up_thread(instance)
+        for name in options.names:
+            start_up_thread(name)
 
     # Watch for docker events to startup or shutdown a new sendMsgThread
-    f = {'type': 'container', 'event': ['start', 'stop'], 'container': [ instance ]}
+    f = {'type': 'container', 'event': ['start', 'stop'], 'container': options.names }
     try:
         for event in client.events(decode=True, filters=f):
             instance = event['Actor']['Attributes']['name']
@@ -180,11 +185,12 @@ def main():
             if event['Action'] == 'start':
                 start_up_thread(instance)
             if event['Action'] == 'stop':
-                workqueue.put(("DOCKER", event['Action']))
-                t.join()
+                containers[instance].wq.put(("DOCKER", event['Action']))
+                containers[instance].thread.join()
     except KeyboardInterrupt:
-        if t.is_alive():
-            workqueue.put(("DOCKER", 'stop'))
+        for i in containers:
+            if containers[i].thread.is_alive():
+                containers[i].wq.put(("DOCKER", 'stop'))
 
 
 if __name__ == '__main__':
