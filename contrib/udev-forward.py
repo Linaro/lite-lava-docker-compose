@@ -30,6 +30,7 @@ import syslog
 import threading
 import docker
 import pyhash
+import queue
 from struct import *
 from ctypes import CDLL
 import argparse
@@ -39,8 +40,7 @@ UDEV_MONITOR_UDEV  = 2
 CLONE_NEWNET = 0x40000000
 UDEV_MONITOR_MAGIC = 0xFEEDCAFE
 
-device_list = []
-lock = threading.Lock()
+workqueue = queue.Queue()
 
 hasher = pyhash.murmur2_32()
 
@@ -111,17 +111,9 @@ def sendMsgThread():
         print(sendfd)
 
     while True:
-        dev = None
-        lock.acquire()
-        if len(device_list):
-            dev = device_list.pop(0)
-        lock.release()
+        (work_type, pkt) = workqueue.get()
 
-        if dev:
-            if options.debug:
-                print('working event {0.action}: {0.device_path}'.format(dev))
-            pkt = BuildPacket(dev)
-
+        if work_type == "PKT":
             # Older kernels (like 4.15 on Ubuntu 18.04) return ECONNREFUSED
             # to work around this we just ignore this specific error as the
             # data still is send on the socket.
@@ -133,9 +125,7 @@ def sendMsgThread():
 def udev_event_callback(dev):
     if options.debug:
         print('background event {0.action}: {0.device_path}'.format(dev))
-    lock.acquire()
-    device_list.append(dev)
-    lock.release()
+    workqueue.put(("PKT", BuildPacket(dev)))
 
 def main():
     parser = argparse.ArgumentParser(description='USB device passthrough for docker containers', add_help=False)
