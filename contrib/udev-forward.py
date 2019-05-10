@@ -89,10 +89,6 @@ def BuildPacket(dev):
     for t in dev.tags:
         tag_hash = tag_hash | bloomHash(t)
 
-#            print(proplist)
-#            print(proplist.hex())
-#            print(data[header_size:].hex())
-
     hdr = buildHeader(len(proplist), subsys, devtype, tag_hash)
 
     return hdr + proplist
