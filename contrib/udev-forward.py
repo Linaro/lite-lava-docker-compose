@@ -162,7 +162,8 @@ def main():
     threading.Thread(target=sendMsgThread).start()
 
     context = pyudev.Context()
-    context.log_priority = syslog.LOG_DEBUG
+    if options.debug:
+        context.log_priority = syslog.LOG_DEBUG
     monitor = pyudev.Monitor.from_netlink(context)
     observer = pyudev.MonitorObserver(monitor, callback=udev_event_callback, name='monitor-observer')
 
