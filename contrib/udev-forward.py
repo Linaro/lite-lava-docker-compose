@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 #  Copyright 2019 Linaro Limited
+#  Copyright (c) 2014 Taeyeon Mori (for MurmurHash2 code)
+
 #  Author: Kumar Gala <kumar.gala@linaro.org>
 
 #  This program is free software; you can redistribute it and/or modify
@@ -18,6 +20,9 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #  MA 02110-1301, USA.
 #
+#  The MurmurHash2 implementation is take from:
+#  https://github.com/Orochimarufan/cdev/blob/master/cdev/murmurhash2.py
+#
 #  UDEV event forwarding to a container
 #
 #  based on https://github.com/eiz/udevfw
@@ -29,8 +34,8 @@ import pyudev
 import syslog
 import threading
 import docker
-import pyhash
 import queue
+import array
 from struct import *
 from ctypes import CDLL
 import argparse
@@ -40,8 +45,6 @@ UDEV_MONITOR_UDEV  = 2
 CLONE_NEWNET = 0x40000000
 UDEV_MONITOR_MAGIC = 0xFEEDCAFE
 
-hasher = pyhash.murmur2_32()
-
 containers = {}
 
 class containersClass:
@@ -49,9 +52,80 @@ class containersClass:
         self.thread = threading.Thread()
         self.wq = queue.Queue()
 
+if array.array('L').itemsize == 4:
+    uint32_t = 'L'
+elif array.array('I').itemsize == 4:
+    uint32_t = 'I'
+else:
+    raise ImportError("Could not determine 4-byte array code!")
+
+def MurmurHash2(input, seed=0):
+    """
+    Generate a 32-bit hash from a string using the MurmurHash2 algorithm
+
+    takes a bytestring!
+
+    Pure-python implementation.
+    """
+    l = len(input)
+
+    # m and r are mixing constants generated offline
+    # They're not really magic, they just happen to work well
+    m = 0x5bd1e995
+    #r = 24
+
+    # Initialize the hash to a "random" value
+    h = seed ^ l
+
+    # Mix 4 bytes at a time into the hash
+    x = l % 4
+    o = l - x
+
+    for k in array.array(uint32_t, input[:o]):
+        # Original Algorithm
+        #k *= m;
+        #k ^= k >> r;
+        #k *= m;
+
+        #h *= m;
+        #h ^= k;
+
+        # My Algorithm
+        k = (k * m) & 0xFFFFFFFF
+        h = (((k ^ (k >> 24)) * m) ^ (h * m)) & 0xFFFFFFFF
+
+        # Explanation: We need to keep it 32-bit. There are a few rules:
+        # 1. Inputs to >> must be truncated, it never overflows
+        # 2. Inputs to * must be truncated, it may overflow
+        # 3. Inputs to ^ may be overflowed, it overflows if any input was overflowed
+        # 4. The end result must be truncated
+        # Therefore:
+        # b = k * m -> may overflow, we truncate it because b >> r cannot take overflowed data
+        # c = b ^ (b >> r) -> never overflows, as b is truncated and >> never does
+        # h = (c * m) ^ (h * m) -> both inputs to ^ may overflow, but since ^ can take it, we truncate once afterwards.
+
+    # Handle the last few bytes of the input array
+    if x > 0:
+        if x > 2:
+            h ^= input[o+2] << 16
+        if x > 1:
+            h ^= input[o+1] << 8
+        h = ((h ^ input[o]) * m) & 0xFFFFFFFF
+
+    # Do a few final mixes of the hash to ensure the last few
+    # bytes are well incorporated
+
+    # Original:
+    #h ^= h >> 13;
+    #h *= m;
+    #h ^= h >> 15;
+
+    h = ((h ^ (h >> 13)) * m) & 0xFFFFFFFF
+    return (h ^ (h >> 15))
+
 def bloomHash(tag):
     bits = 0
-    hash = hasher(tag.encode())
+    hash = MurmurHash2(tag.encode())
 
     bits = bits | 1 << (hash & 63)
     bits = bits | 1 << ((hash >> 6) & 63)
@@ -68,10 +142,10 @@ def buildHeader(proplen, subsys, devtype, taghash):
     devtype_hash = 0
 
     if subsys:
-        subsys_hash = socket.htonl(hasher(subsys.encode()))
+        subsys_hash = socket.htonl(MurmurHash2(subsys.encode()))
 
     if devtype:
-        devtype_hash = socket.htonl(hasher(devtype.encode()))
+        devtype_hash = socket.htonl(MurmurHash2(devtype.encode()))
 
     tag_low = socket.htonl(taghash & 0xffffffff)
     tag_high = socket.htonl(taghash >> 32)
