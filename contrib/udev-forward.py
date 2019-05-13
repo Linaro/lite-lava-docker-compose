@@ -37,7 +37,7 @@ import docker
 import queue
 import array
 from struct import *
-from ctypes import CDLL
+from ctypes import CDLL, get_errno
 import argparse
 
 NETLINK_KOBJECT_UEVENT = 15
