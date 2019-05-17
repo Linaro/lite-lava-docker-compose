@@ -13,4 +13,5 @@ RUN apt-get update && \
 	pip3 install pyOCD && \
 	wget --post-data="accept_license_agreement=accepted&non_emb_ctr=confirmed&submit=Download+software" ${JLINK_URL} -O ${JLINK_DEB} && \
 	dpkg -i ${JLINK_DEB} && \
-	rm ${JLINK_DEB}
+	rm ${JLINK_DEB} && \
+	ln -s /opt/SEGGER/JLink/JLinkExe /usr/local/bin
