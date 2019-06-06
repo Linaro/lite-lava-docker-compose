@@ -4,8 +4,8 @@ FROM ${DC_DISPATCHER_IMAGE}
 
 ENV JLINK_DEB="JLink_Linux_V644h_x86_64.deb"
 ENV JLINK_URL="https://www.segger.com/downloads/jlink/${JLINK_DEB}"
-ENV ZEPHYR_SDK="zephyr-sdk-0.10.0-pr-77-setup.run"
-ENV ZEPHYR_SDK_URL="https://builds.zephyrproject.org/zephyrproject-rtos/sdk-ng/77/${ZEPHYR_SDK}"
+ENV ZEPHYR_SDK="zephyr-sdk-0.10.1-rc1-setup.run"
+ENV ZEPHYR_SDK_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.10.1-rc1/${ZEPHYR_SDK}"
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install \
