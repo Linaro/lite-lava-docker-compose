@@ -225,7 +225,7 @@ def main():
                         help="Docker instance", dest="names")
 
     parser.add_argument("-d", "--debug", action="store_true",
-                        help="Enable Debug Loggin")
+                        help="Enable Debug Logging")
 
     global options
     options = parser.parse_args()
