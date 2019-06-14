@@ -81,4 +81,7 @@ lava-boards:
 	-lavacli -i $(LAVA_IDENTITY) devices dict set frdm-k64f-01 devices/frdm-k64f-01.jinja2
 	lavacli -i $(LAVA_IDENTITY) devices tags add frdm-k64f-01 zephyr-net
 
+testjob:
+	lavacli -i $(LAVA_IDENTITY) jobs submit example/micropython-interactive.job
+
 .PHONY: all dispatcher clean
