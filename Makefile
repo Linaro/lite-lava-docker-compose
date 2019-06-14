@@ -27,6 +27,7 @@ lava-user:
 	test -n "$$passwd" && docker exec -it lava-server lava-server manage users add $(LAVA_USER) --superuser --staff --passwd $$passwd || true
 	@echo
 	@echo "Now login at http://$(LAVA_HOST)/accounts/login/?next=/api/tokens/ and create an auth token (long sequence of chars)"
+	-xdg-open http://$(LAVA_HOST)/accounts/login/?next=/api/tokens/
 
 lava-identity:
 	@echo
