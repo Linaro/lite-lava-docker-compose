@@ -47,3 +47,6 @@ lava-boards:
 	-lavacli -i $(LAVA_IDENTITY) device-types add qemu
 	-lavacli -i $(LAVA_IDENTITY) devices add --type qemu --worker lava-dispatcher qemu-01
 	lavacli -i $(LAVA_IDENTITY) devices dict set qemu-01 devices/qemu-01.jinja2
+
+testjob:
+	lavacli -i dispatcher jobs submit example/lava.job
