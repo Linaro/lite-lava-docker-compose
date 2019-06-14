@@ -28,6 +28,13 @@ clean:
 	docker-compose rm -vsf
 	docker volume rm -f lava-server-pgdata lava-server-joboutput lava-server-device-types lava-server-devices lava-server-health-checks lava-server-worker-state lava-server-worker-http lava-server-worker-tftp
 
+# Clean host environment to let LAVA setup run w/o issues. As an example,
+# stop ModemManager on Ubuntu, which grabs any new serial device and may
+# interfere with commnication on it.
+clean-env:
+	-sudo service apache2 stop
+	-sudo service ModemManager stop
+
 # Create various board configs for connected board(s). Supposed to be done
 # before "install" target.
 board-configs:
