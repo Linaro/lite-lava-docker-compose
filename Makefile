@@ -19,7 +19,7 @@ install:
 	sudo cp contrib/usb-passthrough /usr/local/bin/
 	sudo udevadm control --reload
 
-lava-setup: lava-user lava-identity
+lava-setup: lava-user lava-identity lava-boards
 
 lava-user:
 	@echo -n "Input LAVA admin user passwd: "; \
@@ -35,3 +35,8 @@ lava-identity:
 	read token; \
 	test -n "$$token" && lavacli identities add --username $(LAVA_USER) --token $$token --uri http://$(LAVA_HOST)/RPC2 $(LAVA_IDENTITY) || true
 	lavacli -i dispatcher system version
+
+lava-boards:
+	-lavacli -i $(LAVA_IDENTITY) device-types add frdm-k64f
+	-lavacli -i $(LAVA_IDENTITY) devices add --type frdm-k64f --worker lava-dispatcher frdm-k64f-01
+	lavacli -i $(LAVA_IDENTITY) devices dict set frdm-k64f-01 devices/frdm-k64f-01.jinja2
