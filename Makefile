@@ -10,6 +10,10 @@ LAVA_IDENTITY = dispatcher
 all:
 	docker-compose up
 
+stop:
+	-sudo pkill udev-forward.py
+	docker-compose stop
+
 clean:
 	docker-compose rm -vsf
 	docker volume rm -f lava-server-pgdata lava-server-joboutput lava-server-devices lava-server-health-checks
