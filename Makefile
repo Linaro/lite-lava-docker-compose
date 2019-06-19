@@ -40,3 +40,6 @@ lava-boards:
 	-lavacli -i $(LAVA_IDENTITY) device-types add frdm-k64f
 	-lavacli -i $(LAVA_IDENTITY) devices add --type frdm-k64f --worker lava-dispatcher frdm-k64f-01
 	lavacli -i $(LAVA_IDENTITY) devices dict set frdm-k64f-01 devices/frdm-k64f-01.jinja2
+	-lavacli -i $(LAVA_IDENTITY) device-types add qemu
+	-lavacli -i $(LAVA_IDENTITY) devices add --type qemu --worker lava-dispatcher qemu-01
+	lavacli -i $(LAVA_IDENTITY) devices dict set qemu-01 devices/qemu-01.jinja2
