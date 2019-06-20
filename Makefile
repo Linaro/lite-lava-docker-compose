@@ -8,3 +8,4 @@ clean:
 install:
 	sudo cp contrib/LAVA.rules /etc/udev/rules.d/
 	sudo cp contrib/usb-passthrough /usr/local/bin/
+	sudo udevadm control --reload
