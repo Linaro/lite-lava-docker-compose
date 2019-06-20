@@ -28,6 +28,17 @@ clean:
 	docker-compose rm -vsf
 	docker volume rm -f lava-server-pgdata lava-server-joboutput lava-server-device-types lava-server-devices lava-server-health-checks lava-server-worker-state lava-server-worker-http lava-server-worker-tftp
 
+# Create various board configs for connected board(s). Supposed to be done
+# before "install" target.
+board-configs:
+	@echo "Note: you should have *all* of your boards connected to USB before running this."
+	@echo "Press Ctrl+C to break if not, or Enter to continue. Review results carefully afterwards."
+	@read dummy
+	-mv ser2net/ser2net.conf ser2net/ser2net.conf.old
+	touch ser2net/ser2net.conf
+	@echo
+	contrib/make-board-files.sh devices
+
 # Make any preparation steps (currently none) and build docker-compose images.
 build:
 	docker-compose build
