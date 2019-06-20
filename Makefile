@@ -89,4 +89,10 @@ lava-boards:
 testjob:
 	lavacli -i $(LAVA_IDENTITY) jobs submit example/micropython-interactive.job
 
+dispatcher-shell:
+	docker-compose exec lava-dispatcher bash
+
+server-shell:
+	docker-compose exec lava-server bash
+
 .PHONY: all dispatcher clean
