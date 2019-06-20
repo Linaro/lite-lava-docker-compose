@@ -52,3 +52,6 @@ lava-boards:
 
 testjob:
 	lavacli -i dispatcher jobs submit example/lava.job
+
+dispatcher-shell:
+	docker exec -it lava-dispatcher bash
