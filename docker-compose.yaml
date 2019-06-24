@@ -18,6 +18,7 @@ services:
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
     - ./overlays/lava-server/etc/lava-server/lava-logs:/etc/lava-server/lava-logs:ro
+    - ./overlays/lava-common/usr/lib/python3/dist-packages/lava_common/utils.py:/usr/lib/python3/dist-packages/lava_common/utils.py:ro
     depends_on:
     - db
     environment:
@@ -37,6 +38,9 @@ services:
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
     - ./overlays/lava-server/etc/lava-server/lava-master:/etc/lava-server/lava-master:ro
     - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:ro
+    - ./overlays/lava-common/usr/lib/python3/dist-packages/lava_common/utils.py:/usr/lib/python3/dist-packages/lava_common/utils.py:ro
+    - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/cc3220SF.jinja2:/etc/lava-server/dispatcher-config/device-types/cc3220SF.jinja2:ro
+    - ./overlays/lava-common/usr/lib/python3/dist-packages/lava_common/schemas/boot/openocd.py:/usr/lib/python3/dist-packages/lava_common/schemas/boot/openocd.py:ro
     depends_on:
     - db
     environment:
@@ -51,6 +55,9 @@ services:
     volumes:
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
     - ./overlays/lava-publisher/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
+    - ./overlays/lava-common/usr/lib/python3/dist-packages/lava_common/utils.py:/usr/lib/python3/dist-packages/lava_common/utils.py:ro
+    - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/cc3220SF.jinja2:/etc/lava-server/dispatcher-config/device-types/cc3220SF.jinja2:ro
+    - ./overlays/lava-common/usr/lib/python3/dist-packages/lava_common/schemas/boot/openocd.py:/usr/lib/python3/dist-packages/lava_common/schemas/boot/openocd.py:ro
     environment:
       SERVICES: "lava-publisher"
     ports:
@@ -67,6 +74,7 @@ services:
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
     - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:ro
+    - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/cc3220SF.jinja2:/etc/lava-server/dispatcher-config/device-types/cc3220SF.jinja2:ro
     depends_on:
     - db
     environment:
@@ -111,6 +119,10 @@ services:
     - /boot:/boot:ro
     - /lib/modules:/lib/modules:ro
     - ./overlays/lava-dispatcher/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/pyocd.py:/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/pyocd.py:ro
+    - ./overlays/lava-common/usr/lib/python3/dist-packages/lava_common/utils.py:/usr/lib/python3/dist-packages/lava_common/utils.py:ro
+    - ./overlays/lava-common/usr/lib/python3/dist-packages/lava_common/schemas/boot/openocd.py:/usr/lib/python3/dist-packages/lava_common/schemas/boot/openocd.py:ro
+    - ./overlays/lava-dispatcher/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/openocd.py:/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/openocd.py:ro
+    - ./overlays/lava-dispatcher/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/strategies.py:/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/strategies.py:ro
       # Example for development
       # If you wanted to point to a local git checkout of lava for development
       # of lava_dispatcher, you can uncomment out the lines below and
