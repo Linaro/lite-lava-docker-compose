@@ -136,6 +136,12 @@ services:
     - ./overlays/lava-common/usr/lib/python3/dist-packages/lava_common/schemas/boot/openocd.py:/usr/lib/python3/dist-packages/lava_common/schemas/boot/openocd.py:ro
     - ./overlays/lava-dispatcher/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/openocd.py:/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/openocd.py:ro
     - ./overlays/lava-dispatcher/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/strategies.py:/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/strategies.py:ro
+    - ./overlays/lava-dispatcher/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/jlink.py:/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/jlink.py:ro
+    - ./overlays/lava-dispatcher/usr/lib/python3/dist-packages/lava_dispatcher/tests/test_jlink.py:/usr/lib/python3/dist-packages/lava_dispatcher/tests/test_jlink.py:ro
+    - ./overlays/lava-dispatcher/usr/lib/python3/dist-packages/lava_dispatcher/tests/pipline_refs/jlink.yaml:/usr/lib/python3/dist-packages/lava_dispatcher/tests/pipline_refs/jlink.yaml:ro
+    - ./overlays/lava-dispatcher/usr/lib/python3/dist-packages/lava_dispatcher/tests/pipline_refs/jlink-with-power.yaml:/usr/lib/python3/dist-packages/lava_dispatcher/tests/pipline_refs/jlink-with-power.yaml:ro
+    - ./overlays/lava-common/schemas/boot/jlink.py:/usr/lib/python3/dist-packages/lava-common/schemas/boot/jlink.py:ro
+    - ./overlays/lava_scheduler_app/tests/device-types/frdm-k64f.jinja2:/usr/lib/python3/dist-packages/lava_scheduler_app/tests/device-types/frdm-k64f.jinja2
       # Example for development
       # If you wanted to point to a local git checkout of lava for development
       # of lava_dispatcher, you can uncomment out the lines below and
