@@ -29,6 +29,18 @@ actions:
           - -d {{ debug|default('debug') }}
           - -t k64f
           - -f 3000000
+      jlink:
+        parameters:
+          command:
+            JLinkExe
+          address:
+            0x00000000
+          options:
+          - -device MK64FN1M0xxx12
+          - -if SWD
+          - -speed 4000
+          - -autoconnect 1
+          - -CommanderScript cmd.jlink
       cmsis-dap:
         parameters:
           usb_mass_device: '{{ usb_mass_device|default('/notset') }}'
