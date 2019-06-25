@@ -80,6 +80,9 @@ def get_device_numbers(serial_no, dev_type, board_file, ser2net_file):
                                 board_jinja.write("{%% set connection_command = 'telnet ser2net %d' %%}\n" % port)
             break
 
+    if dev_type == "frdm-k64f":
+        board_jinja.write("{% set resets_after_flash = false %}\n")
+
 
 def main():
     parser = argparse.ArgumentParser(description='LAVA board helper', add_help=False)
