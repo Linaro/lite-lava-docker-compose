@@ -37,6 +37,7 @@ services:
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
     - ./overlays/lava-server/etc/lava-server/lava-master:/etc/lava-server/lava-master:ro
+    - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/musca_a.jinja2:/etc/lava-server/dispatcher-config/device-types/musca_a.jinja2:ro
     - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:ro
     - ./overlays/lava-common/usr/lib/python3/dist-packages/lava_common/utils.py:/usr/lib/python3/dist-packages/lava_common/utils.py:ro
     - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/cc3220SF.jinja2:/etc/lava-server/dispatcher-config/device-types/cc3220SF.jinja2:ro
