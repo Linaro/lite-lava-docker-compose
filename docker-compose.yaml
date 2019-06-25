@@ -75,6 +75,18 @@ services:
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
     - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:ro
     - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/cc3220SF.jinja2:/etc/lava-server/dispatcher-config/device-types/cc3220SF.jinja2:ro
+      # Example for development
+      # If you wanted to point to a local git checkout of lava for development
+      # of lava_dispatcher, you can uncomment out the lines below and
+      # set the 'source:' to point to where your lava checkout is
+      # The example assumes its relative in ../lava
+      #
+#    - type: bind
+#      source: ../lava/lava_server
+#      target: /usr/lib/python3/dist-packages/lava_server
+#    - type: bind
+#      source: ../lava/lava_common
+#      target: /usr/lib/python3/dist-packages/lava_common
     depends_on:
     - db
     environment:
@@ -132,6 +144,9 @@ services:
 #    - type: bind
 #      source: ../lava/lava_dispatcher
 #      target: /usr/lib/python3/dist-packages/lava_dispatcher
+#    - type: bind
+#      source: ../lava/lava_common
+#      target: /usr/lib/python3/dist-packages/lava_common
 
   ser2net:
     container_name: lava-ser2net
