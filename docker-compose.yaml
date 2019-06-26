@@ -133,6 +133,7 @@ services:
     - worker-state:/var/lib/lava/dispatcher/worker/
     - worker-http:/var/lib/lava/dispatcher/tmp
     - worker-tftp:/srv/tftp
+    - ./test-images:/test-images:ro
       # Example for development
       # If you wanted to point to a local git checkout of lava for development
       # of lava_dispatcher, you can uncomment out the lines below and
