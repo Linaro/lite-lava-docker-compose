@@ -130,6 +130,7 @@ services:
     - /run/udev/control:/run/udev/control:ro # libudev expects it for udev events
     - /boot:/boot:ro
     - /lib/modules:/lib/modules:ro
+    - ./test-images:/test-images:ro
     - ./overlays/lava-dispatcher/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/pyocd.py:/usr/lib/python3/dist-packages/lava_dispatcher/actions/boot/pyocd.py:ro
     - ./overlays/lava-common/usr/lib/python3/dist-packages/lava_common/utils.py:/usr/lib/python3/dist-packages/lava_common/utils.py:ro
     - ./overlays/lava-common/usr/lib/python3/dist-packages/lava_common/schemas/boot/openocd.py:/usr/lib/python3/dist-packages/lava_common/schemas/boot/openocd.py:ro
