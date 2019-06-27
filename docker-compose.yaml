@@ -38,6 +38,7 @@ services:
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
     - ./overlays/lava-server/etc/lava-server/lava-master:/etc/lava-server/lava-master:ro
     - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:ro
+    - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/imxrt1050evkb.jinja2:/etc/lava-server/dispatcher-config/device-types/imxrt1050evkb.jinja2:ro
     - ./overlays/lava-common/usr/lib/python3/dist-packages/lava_common/utils.py:/usr/lib/python3/dist-packages/lava_common/utils.py:ro
     - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/cc3220SF.jinja2:/etc/lava-server/dispatcher-config/device-types/cc3220SF.jinja2:ro
     - ./overlays/lava-common/usr/lib/python3/dist-packages/lava_common/schemas/boot/openocd.py:/usr/lib/python3/dist-packages/lava_common/schemas/boot/openocd.py:ro
@@ -75,6 +76,7 @@ services:
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
     - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:/etc/lava-server/dispatcher-config/device-types/frdm-k64f.jinja2:ro
     - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/cc3220SF.jinja2:/etc/lava-server/dispatcher-config/device-types/cc3220SF.jinja2:ro
+    - ./overlays/lava-server/etc/lava-server/dispatcher-config/device-types/imxrt1050evkb.jinja2:/etc/lava-server/dispatcher-config/device-types/imxrt1050evkb.jinja2:ro
       # Example for development
       # If you wanted to point to a local git checkout of lava for development
       # of lava_dispatcher, you can uncomment out the lines below and
@@ -142,6 +144,7 @@ services:
     - ./overlays/lava-dispatcher/usr/lib/python3/dist-packages/lava_dispatcher/tests/pipline_refs/jlink-with-power.yaml:/usr/lib/python3/dist-packages/lava_dispatcher/tests/pipline_refs/jlink-with-power.yaml:ro
     - ./overlays/lava-common/schemas/boot/jlink.py:/usr/lib/python3/dist-packages/lava-common/schemas/boot/jlink.py:ro
     - ./overlays/lava_scheduler_app/tests/device-types/frdm-k64f.jinja2:/usr/lib/python3/dist-packages/lava_scheduler_app/tests/device-types/frdm-k64f.jinja2
+    - ./overlays/lava_scheduler_app/tests/device-types/imxrt1050evkb.jinja2:/usr/lib/python3/dist-packages/lava_scheduler_app/tests/device-types/imxrt1050evkb.jinja2:ro
       # Example for development
       # If you wanted to point to a local git checkout of lava for development
       # of lava_dispatcher, you can uncomment out the lines below and
