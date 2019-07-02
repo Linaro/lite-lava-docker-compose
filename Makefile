@@ -69,7 +69,7 @@ lava-boards:
 	lavacli -i $(LAVA_IDENTITY) device-types template set musca_a device-types/musca_a.jinja2
 
 testjob:
-	lavacli -i dispatcher jobs submit example/lava.job
+	lavacli -i dispatcher jobs submit example/micropython-interactive.job
 
 dispatcher-shell:
 	docker exec -it lava-dispatcher bash
