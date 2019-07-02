@@ -31,6 +31,10 @@ board-configs:
 	@echo
 	contrib/make-board-files.sh devices
 
+# Make any preparation steps (currently none) and build docker-compose images.
+build:
+	docker-compose build
+
 install:
 	sudo cp contrib/LAVA.rules /etc/udev/rules.d/
 	sudo cp contrib/usb-passthrough /usr/local/bin/
