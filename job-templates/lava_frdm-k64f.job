@@ -21,7 +21,7 @@ actions:
     to: tmpfs
     images:
         zephyr:
-          url: 'file:///test-images/frdm-k64f/logging.log_list/zephyr.bin'
+          url: <test_image>
 
 - boot:
     method: cmsis-dap
