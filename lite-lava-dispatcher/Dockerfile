@@ -2,10 +2,10 @@ ARG image
 
 FROM ${image}
 
-ENV JLINK_DEB="JLink_Linux_V644h_x86_64.deb"
+ENV JLINK_DEB="JLink_Linux_V650_x86_64.deb"
 ENV JLINK_URL="https://www.segger.com/downloads/jlink/${JLINK_DEB}"
 ENV ZEPHYR_HOST_TOOLS="zephyr-sdk-x86_64-hosttools-standalone-0.9.sh"
-ENV ZEPHYR_HOST_TOOLS_URL="https://builds.zephyrproject.org/sdk/0.10.1/${ZEPHYR_HOST_TOOLS}"
+ENV ZEPHYR_HOST_TOOLS_URL="https://builds.zephyrproject.org/sdk/0.10.3/${ZEPHYR_HOST_TOOLS}"
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install \
