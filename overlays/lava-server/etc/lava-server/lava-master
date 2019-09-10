@@ -1,7 +1,7 @@
 # Configuration for lava-master daemon
 
 # Socket addresses of the master and logger (IPv4 only)
-# MASTER_SOCKET="--master-socket tcp://*:5556"
+MASTER_SOCKET="--master-socket tcp://*:5556 --event-url tcp://lava-publisher:5500"
 
 # Socket addresses of the master and logger (IPv4 and IPv6)
 # IPV6="--ipv6"
