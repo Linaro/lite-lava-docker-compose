@@ -21,4 +21,8 @@ RUN apt-get update && \
 	chmod a+x ${ZEPHYR_HOST_TOOLS} && \
 	./${ZEPHYR_HOST_TOOLS} -d /opt/zephyr-sdk -y && \
 	rm ${ZEPHYR_HOST_TOOLS} && \
-	ln -s /opt/zephyr-sdk/sysroots/x86_64-pokysdk-linux/usr/bin/openocd /usr/local/bin/
+	ln -s /opt/zephyr-sdk/sysroots/x86_64-pokysdk-linux/usr/bin/openocd /usr/local/bin/ && \
+	git clone https://github.com/Yepkit/ykush && \
+	cd ykush && ./build.sh && \
+	cp bin/ykushcmd /usr/local/bin && \
+	cd .. && rm -fr ykush \
