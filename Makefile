@@ -76,6 +76,14 @@ lava-boards:
 	-lavacli -i $(LAVA_IDENTITY) devices add --type qemu --worker lava-dispatcher qemu-01
 	lavacli -i $(LAVA_IDENTITY) devices dict set qemu-01 devices/qemu-01.jinja2
 
+	-lavacli -i $(LAVA_IDENTITY) device-types add docker
+	-lavacli -i $(LAVA_IDENTITY) devices add --type docker --worker lava-dispatcher docker-01
+	lavacli -i $(LAVA_IDENTITY) devices dict set docker-01 devices/docker-generic.jinja2
+	lavacli -i $(LAVA_IDENTITY) devices tags add docker-01 zephyr-net
+	-lavacli -i $(LAVA_IDENTITY) devices add --type docker --worker lava-dispatcher docker-02
+	lavacli -i $(LAVA_IDENTITY) devices dict set docker-02 devices/docker-generic.jinja2
+	lavacli -i $(LAVA_IDENTITY) devices tags add docker-02 inet
+
 	# Now create LAVA device types/device for real hardware boards. Note
 	# that these require actual device configuration files for specific
 	# boards, which are different from a developer to developer, and
