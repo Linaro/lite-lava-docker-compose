@@ -1,0 +1,16 @@
+{% extends 'qemu.jinja2' %}
+{% set mac_addr = 'DE:AD:BE:EF:06:01' %}
+{% set memory = 1024 %}
+{% set netdevice = 'tap' %}
+{% block qemu_method %}
+        parameters:
+          command:
+            /opt/zephyr-sdk/sysroots/x86_64-pokysdk-linux/usr/bin/qemu-system-{{ arch }}
+          boot_options:
+          options:
+          - "-cpu {{ cpu }}"
+          - "-machine {{ machine }}"
+          - "-vga none -serial mon:stdio -nographic"
+          - "-net nic,{{ model }},macaddr={{ mac_addr }} -net {{netdevice}} -m {{ memory }} -monitor none"
+#          - "-version"
+{% endblock qemu_method %}
