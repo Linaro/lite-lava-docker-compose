@@ -76,6 +76,10 @@ lava-boards:
 	-lavacli -i $(LAVA_IDENTITY) devices add --type qemu --worker lava-dispatcher qemu-01
 	lavacli -i $(LAVA_IDENTITY) devices dict set qemu-01 devices/qemu-01.jinja2
 
+	-lavacli -i $(LAVA_IDENTITY) devices add --type qemu --worker lava-dispatcher qemu-zephyr-01
+	lavacli -i $(LAVA_IDENTITY) devices dict set qemu-zephyr-01 devices/qemu-zephyr-01.jinja2
+	lavacli -i $(LAVA_IDENTITY) devices tags add qemu-zephyr-01 qemu-zephyr
+
 	-lavacli -i $(LAVA_IDENTITY) device-types add docker
 	-lavacli -i $(LAVA_IDENTITY) devices add --type docker --worker lava-dispatcher docker-01
 	lavacli -i $(LAVA_IDENTITY) devices dict set docker-01 devices/docker-generic.jinja2
