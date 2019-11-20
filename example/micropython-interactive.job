@@ -1,5 +1,6 @@
-device_type: 'qemu'
 job_name: 'lite-aeolus-micropython #823-2ac65a24'
+
+device_type: 'qemu'
 
 timeouts:
   job:
