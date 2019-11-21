@@ -10,11 +10,12 @@ ENV ZEPHYR_HOST_TOOLS_URL="https://builds.zephyrproject.org/sdk/0.10.3/${ZEPHYR_
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install \
         ${extra_packages} \
-        python3-pip libusb-1.0.0 vim && \
-        apt-get -y -t stretch-backports install libudev1 && \
+        python3-pip libusb-1.0.0 vim wget && \
+        apt-get -y install libudev1 && \
         pip3 install --upgrade setuptools && \
         pip3 install -U git+https://github.com/mbedmicro/pyOCD && \
         wget --post-data="accept_license_agreement=accepted&non_emb_ctr=confirmed&submit=Download+software" ${JLINK_URL} -O ${JLINK_DEB} && \
+        apt-get -y install libncurses5 && \
         dpkg -i ${JLINK_DEB} && \
         rm ${JLINK_DEB} && \
         ln -s /opt/SEGGER/JLink/JLinkExe /usr/local/bin && \
