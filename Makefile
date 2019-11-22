@@ -74,7 +74,9 @@ lava-boards:
 
 	-lavacli -i $(LAVA_IDENTITY) device-types add docker
 	-lavacli -i $(LAVA_IDENTITY) devices add --type docker --worker lava-dispatcher docker-01
-	lavacli -i $(LAVA_IDENTITY) devices dict set docker-01 devices/docker-01.jinja2
+	lavacli -i $(LAVA_IDENTITY) devices dict set docker-01 devices/docker-generic.jinja2
+	-lavacli -i $(LAVA_IDENTITY) devices add --type docker --worker lava-dispatcher docker-02
+	lavacli -i $(LAVA_IDENTITY) devices dict set docker-02 devices/docker-generic.jinja2
 
 testjob:
 	lavacli -i dispatcher jobs submit example/micropython-interactive.job
