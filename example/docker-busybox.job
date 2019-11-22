@@ -31,6 +31,15 @@ actions:
     prompts:
     - '/ #'
 
-# This job doesn't have a test section, as it just demonstrates how to
-# boot a docker container, but a realistic test job of course will have it.
-# - test:
+- test:
+    timeout:
+      seconds: 15
+
+    monitors:
+    - name: wait-finish
+      # Empty start is ok (will start with the beginning of output)
+      start: ""
+      # Something in the last line of output
+      end: "var"
+      # This is ignored
+      pattern: "__ignored__"
