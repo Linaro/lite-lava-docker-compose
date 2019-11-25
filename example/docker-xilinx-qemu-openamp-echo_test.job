@@ -1,0 +1,73 @@
+job_name: docker-xilinx-qemu-openamp-echo_test
+
+device_type: docker
+visibility: public
+
+timeouts:
+  job:
+    seconds: 400
+  action:
+    seconds: 320
+
+actions:
+
+- deploy:
+    to: docker
+    image:
+        name: edmooring/qemu:xilinx-qemu2
+        local: false
+
+- boot:
+    method: docker
+    # Command to execute in container. Can be set to empty string ("") to use
+    # image's default command.
+    command: "https://people.linaro.org/~ed.mooring/Images/openamp-image-minimal-zcu102-zynqmp.wic.qemu-sd"
+    #command: "http://192.168.0.103:8081/static/openamp-image-minimal-zcu102-zynqmp.wic.qemu-sd"
+
+- test:
+    timeout:
+      seconds: 290
+
+    interactive:
+    - name: wait_login
+      prompts: ["login:"]
+      script:
+      - command:
+# Latest boot image doesn't require password, but previous did, so keep around.
+#    - name: login
+#      prompts: ["Password:"]
+#      script:
+#      - command: "root"
+    - name: login
+      prompts: ["~# "]
+      script:
+      - command: "root"
+
+    # This is a kind of sanity check that needed binary exists. It also shows
+    # how properly add an "extra testcase" to a script, and shows how cumbersome
+    # it can be in LAVA, e.g. here we need to match EOL explicitly (to not mess
+    # matching output of further commands), and as LAVA currently sees "\r\r\n"
+    # as EOL, need to use "\r*\n" in case that ever gets fixed.
+    - name: echo_test_exists
+      prompts: ["~# "]
+      echo: discard
+      script:
+      - command: "which echo_test"
+        successes:
+        - message: ".+/echo_test\r*\n"
+
+    - name: openamp_echo_test
+      prompts: ["~# "]
+      echo: discard
+      script:
+      - command: "echo image_echo_test >/sys/class/remoteproc/remoteproc0/firmware"
+      - command: "echo start >/sys/class/remoteproc/remoteproc0/state"
+        name: "start_remoteproc"
+        successes:
+        - message: "remoteproc remoteproc0: remote processor r5@0 is now up"
+      - command: "echo_test"
+        name: echo_test
+        successes:
+        - message: "Echo Test Round 0 Test Results: Error count = 0"
+      # Just sanity check that we get back to prompt (e.g. didn't crash system)
+      - command: ""
