@@ -7,10 +7,12 @@ ENV JLINK_URL="https://www.segger.com/downloads/jlink/${JLINK_DEB}"
 ENV ZEPHYR_HOST_TOOLS="zephyr-sdk-x86_64-hosttools-standalone-0.9.sh"
 ENV ZEPHYR_HOST_TOOLS_URL="https://builds.zephyrproject.org/sdk/0.10.3/${ZEPHYR_HOST_TOOLS}"
 
+COPY lava-coordinator.sh /root/entrypoint.d/
+
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install \
         ${extra_packages} \
-        python3-pip libusb-1.0.0 vim wget && \
+        python3-pip libusb-1.0.0 vim wget lava-coordinator && \
         apt-get -y install libudev1 && \
         pip3 install --upgrade setuptools && \
         pip3 install -U git+https://github.com/mbedmicro/pyOCD && \
