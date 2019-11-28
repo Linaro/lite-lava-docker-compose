@@ -75,6 +75,9 @@ services:
 #      source: ../lava/lava_server
 #      target: /usr/lib/python3/dist-packages/lava_server
 #    - type: bind
+#      source: ../lava/lava_scheduler_app
+#      target: /usr/lib/python3/dist-packages/lava_scheduler_app
+#    - type: bind
 #      source: ../lava/lava_common
 #      target: /usr/lib/python3/dist-packages/lava_common
     depends_on:
