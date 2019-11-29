@@ -27,8 +27,8 @@ actions:
     images:
         zephyr:
           image_arg: '-kernel {zephyr}'
-          # Originally from http://snapshots.linaro.org/components/kernel/aeolus-2/micropython/pfalcon/zephyr/qemu_cortex_m3/823/zephyr.bin
-          url: 'file:///test-images/qemu_cortex_m3/micropython/zephyr.bin'
+          #url: http://snapshots.linaro.org/components/kernel/aeolus-2/micropython/pfalcon/zephyr/qemu_cortex_m3/923/zephyr.bin
+          url: file:///test-images/qemu_cortex_m3/micropython/zephyr.bin
 
 - boot:
     method: qemu
