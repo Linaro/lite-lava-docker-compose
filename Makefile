@@ -83,3 +83,6 @@ testjob:
 
 dispatcher-shell:
 	docker exec -it lava-dispatcher bash
+
+server-shell:
+	docker exec -it lava-server bash
