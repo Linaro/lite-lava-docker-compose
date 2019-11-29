@@ -46,9 +46,11 @@ actions:
       # Just wait for prompt
       - command:
       - command: "2+2\r\n"
+        name: 2_plus_2
         successes:
         - message: "4"
       - command: "2-3\r\n"
+        name: 2_minus_3
         successes:
         - message: "-1"
 
