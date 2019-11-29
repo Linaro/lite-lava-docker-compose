@@ -48,11 +48,13 @@ actions:
       - command: "2+2\r\n"
         name: 2_plus_2
         successes:
-        - message: "4"
+        # Should match both end of previous and this line, together with
+        # actual content. Matching for "4" will match "14", "41", etc.
+        - message: "\n4\r"
       - command: "2-3\r\n"
         name: 2_minus_3
         successes:
-        - message: "-1"
+        - message: "\n-1\r"
 
 
 metadata:
