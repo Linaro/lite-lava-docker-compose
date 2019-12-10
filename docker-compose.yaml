@@ -2,7 +2,6 @@ version: "3.4"
 services:
   db:
     image: ${DC_POSTGRES_IMAGE}
-    container_name: lava-server-db
     environment:
       POSTGRES_USER: lavaserver
       POSTGRES_PASSWORD: lavaserverdbpass
@@ -11,7 +10,6 @@ services:
     restart: unless-stopped
 
   lava-logs:
-    container_name: lava-logs
     image: ${DC_SERVER_IMAGE}
     volumes:
     - joboutput:/var/lib/lava-server/default/media/job-output
@@ -28,7 +26,6 @@ services:
     stop_grace_period: 20s
 
   lava-master:
-    container_name: lava-master
     image: ${DC_SERVER_IMAGE}
     volumes:
     - devices:/etc/lava-server/dispatcher-config/devices:ro
@@ -45,7 +42,6 @@ services:
     restart: unless-stopped
 
   lava-publisher:
-    container_name: lava-publisher
     image: ${DC_SERVER_IMAGE}
     volumes:
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
@@ -57,7 +53,6 @@ services:
     restart: unless-stopped
 
   lava-server:
-    container_name: lava-server
     image: ${DC_SERVER_IMAGE}
     volumes:
     - devices:/etc/lava-server/dispatcher-config/devices
@@ -73,7 +68,6 @@ services:
     restart: unless-stopped
 
   apache2:
-    container_name: apache2
     image: ${DC_SERVER_IMAGE}
     volumes:
     - ./overlays/lava-server/etc/apache2/sites-available/lava-server.conf:/etc/apache2/sites-available/lava-server.conf:ro
@@ -86,7 +80,6 @@ services:
     restart: unless-stopped
 
   lava-dispatcher:
-    container_name: lava-dispatcher
     image: ${DC_DISPATCHER_IMAGE}
     devices:
     - /dev/kvm # needed for QEMU
