@@ -1,4 +1,5 @@
 all:
+	docker-compose pull
 	docker-compose up
 
 clean:
