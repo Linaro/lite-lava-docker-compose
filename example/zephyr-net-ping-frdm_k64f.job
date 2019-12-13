@@ -1,0 +1,99 @@
+job_name: zephyr-net-ping
+
+protocols:
+  lava-multinode:
+    roles:
+      device:
+        device_type: frdm-k64f
+        count: 1
+      host:
+        device_type: docker
+        count: 1
+
+timeouts:
+  job:
+    minutes: 3
+  action:
+    minutes: 1
+visibility: public
+
+actions:
+
+- deploy:
+    role: [device]
+    to: tmpfs
+    images:
+        zephyr:
+          url: 'file:///test-images/frdm_k64f/dumb_http_server/zephyr-v1.14.0-5799-g42c5b0a7fafa.bin'
+
+- boot:
+    role: [device]
+    method: cmsis-dap
+
+- test:
+    role: [device]
+    timeout:
+        seconds: 20
+    interactive:
+    - name: 1_zephyr_banner
+      prompts: ["Booting Zephyr OS"]
+      script:
+      # Just wait for prompt
+      - command:
+        name: result
+    - name: 2_ip_addr_assigned
+      prompts: ["IPv4 address: "]
+      script:
+      - command:
+        name: result
+# In latest Zephyr versions appears before "IPv4 address:" message. And anyway,
+# it's driver-specific message, let's keep thsi test generic.
+#    - name: 3_phy_enabled
+#      prompts: ["eth_mcux: Enabled 100M full-duplex mode"]
+#      script:
+#      - command:
+#        name: result
+
+
+- deploy:
+    role: [host]
+    to: docker
+    image:
+        name: busybox
+        local: true
+
+- boot:
+    role: [host]
+    method: docker
+    command: ""
+    prompts:
+    - '/ #'
+
+- test:
+    role: [host]
+    timeout:
+      seconds: 50
+    interactive:
+    - name: ping
+      prompts: ["/ # "]
+      echo: discard
+      script:
+      # Just wait for prompt
+      - command:
+      # Wait for device to boot
+      - command: "sleep 12"
+
+      - command: "ping -c10 192.0.2.1"
+        name: ping_default_10_times
+        successes:
+        - message: "10 packets transmitted, 10 packets received, 0% packet loss"
+
+      - command: "ping -s1472 -c10 192.0.2.1"
+        name: ping_full_eth_frame_10_times
+        successes:
+        - message: "10 packets transmitted, 10 packets received, 0% packet loss"
+
+      - command: "ping -i0.01 -s1472 -c1000 192.0.2.1"
+        name: ping_flood_10ms_full_eth_frame_1000_times
+        successes:
+        - message: "1000 packets transmitted, 1000 packets received, 0% packet loss"
