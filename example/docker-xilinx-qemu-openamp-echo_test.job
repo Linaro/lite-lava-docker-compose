@@ -5,9 +5,9 @@ visibility: public
 
 timeouts:
   job:
-    seconds: 400
+    seconds: 600
   action:
-    seconds: 320
+    seconds: 600
 
 actions:
 
@@ -26,7 +26,7 @@ actions:
 
 - test:
     timeout:
-      seconds: 290
+      seconds: 600
 
     interactive:
     - name: wait_login
