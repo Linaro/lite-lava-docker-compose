@@ -1,3 +1,14 @@
+lite-lava-docker-compose
+========================
+
+This is a Linaro LITE customized fork of LAVA dockerized setup. Instructions
+for it are available in the
+[wiki](https://collaborate.linaro.org/pages/viewpage.action?pageId=118293253).
+
+Below is the original README.
+
+-------
+
 docker-compose
 ==============
 
