@@ -80,7 +80,17 @@ services:
     restart: unless-stopped
 
   lava-dispatcher:
-    image: ${DC_DISPATCHER_IMAGE}
+    build:
+      context: ./dispatcher
+      args:
+        image: ${DC_DISPATCHER_IMAGE}
+        extra_packages: "linux-image-amd64 curl"
+    depends_on:
+    - lava-dispatcher-webserver
+    - lava-dispatcher-tftpd
+    - lava-dispatcher-ser2net
+    - lava-dispatcher-nfs
+    hostname: worker0
     devices:
     - /dev/kvm # needed for QEMU
     - /dev/net/tun # needed for QEMU
@@ -90,13 +100,77 @@ services:
     - NET_ADMIN # needed for QEMU
     - SYS_ADMIN # needed for usb mass storage
     environment:
-      DISPATCHER_HOSTNAME: "--hostname=lava-dispatcher"
-      LOGGER_URL: "tcp://lava-logs:5555"
-      MASTER_URL: "tcp://lava-master:5556"
+      DISPATCHER_HOSTNAME: "--hostname=${DC_DISPATCHER_HOSTNAME}"
+      LOGGER_URL: "tcp://${DC_LAVA_LOGS_HOSTNAME}:5555"
+      MASTER_URL: "tcp://${DC_LAVA_MASTER_HOSTNAME}:5556"
+      ENCRYPT: "${DC_LAVA_MASTER_ENCRYPT}"
+      SOCKS_PROXY: "${DC_SOCKS_PROXY}"
+      MASTER_CERT: "${DC_MASTER_CERT}"
+      SLAVES_CERT: "${DC_SLAVES_CERT}"
+      http_proxy: "${http_proxy}"
+      https_proxy: "${https_proxy}"
+      ftp_proxy: "${ftp_proxy}"
     volumes:
     - /run/udev/control:/run/udev/control:ro # libudev expects it for udev events
     - /boot:/boot:ro
     - /lib/modules:/lib/modules:ro
+    - '/dev/bus:/dev/bus:ro' # required for USB devices
+    - '/dev/serial:/dev/serial:ro' # required for serial adapters
+    - '/dev/disk:/dev/disk:ro' # required for SDMux
+    - worker-http:/var/lib/lava/dispatcher/tmp
+    - worker-tftp:/srv/tftp
+
+  lava-dispatcher-webserver:
+    build:
+      context: ./httpd
+    ports:
+      - 80
+    volumes:
+      - worker-http:/var/lib/lava/dispatcher/tmp
+
+  lava-dispatcher-tftpd:
+    build:
+      context: ./tftpd
+    environment:
+      http_proxy: "${http_proxy}"
+      https_proxy: "${https_proxy}"
+      ftp_proxy: "${ftp_proxy}"
+    ports:
+        - 69:69/udp
+    volumes:
+      - worker-tftp:/srv/tftp
+
+  lava-dispatcher-ser2net:
+    build:
+      context: ./ser2net
+    environment:
+      http_proxy: "${http_proxy}"
+      https_proxy: "${https_proxy}"
+      ftp_proxy: "${ftp_proxy}"
+    privileged: true
+    volumes:
+      - '/dev/serial:/dev/serial' # required for serial adapters
+      - '/dev:/dev'
+    devices: []
+    ports:
+      - 7101:7101
+
+  lava-dispatcher-nfs:
+    build:
+      context: ./nfs
+    environment:
+      http_proxy: "${http_proxy}"
+      https_proxy: "${https_proxy}"
+      ftp_proxy: "${ftp_proxy}"
+    privileged: true
+    volumes:
+      - worker-http:/var/lib/lava/dispatcher/tmp
+    ports:
+      - 111:111
+      - 111:111/udp
+      - 2049:2049
+      - 2049:2049/udp
+      - 35543:35543
 
 volumes:
   db-data:
@@ -107,3 +181,5 @@ volumes:
     name: lava-server-health-checks
   joboutput:
     name: lava-server-joboutput
+  worker-http:
+  worker-tftp:
