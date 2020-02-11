@@ -16,7 +16,7 @@ RUN apt-get update && \
         apt-get -y install libudev1 && \
         pip3 install --upgrade setuptools && \
         pip3 install -U git+https://github.com/mbedmicro/pyOCD && \
-        wget --post-data="accept_license_agreement=accepted&non_emb_ctr=confirmed&submit=Download+software" ${JLINK_URL} -O ${JLINK_DEB} && \
+        wget --no-check-certificate --post-data="accept_license_agreement=accepted&non_emb_ctr=confirmed&submit=Download+software" ${JLINK_URL} -O ${JLINK_DEB} && \
         apt-get -y install libncurses5 && \
         dpkg -i ${JLINK_DEB} && \
         rm ${JLINK_DEB} && \
