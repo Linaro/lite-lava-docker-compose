@@ -1,6 +1,9 @@
 job_name: docker-xilinx-qemu-openamp-echo_test
 
 device_type: docker
+tags:
+- inet
+
 visibility: public
 
 timeouts:
