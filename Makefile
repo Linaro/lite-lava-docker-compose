@@ -1,7 +1,13 @@
 all:
-	docker-compose pull
+	docker-compose build
 	docker-compose up
+
+lava-dispatcher:
+	docker-compose build lava-dispatcher
+	docker-compose up lava-dispatcher
 
 clean:
 	docker-compose rm -vsf
-	docker volume rm -f lava-server-pgdata lava-server-joboutput lava-server-devices lava-server-health-checks
+	docker volume rm -f lava-server-pgdata lava-server-joboutput lava-server-devices lava-server-health-checks worker-http worker-tftp
+
+.PHONY: all dispatcher clean
