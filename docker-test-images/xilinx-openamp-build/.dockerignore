@@ -1,0 +1,7 @@
+# Yocto downloads (cached on host)
+downloads/
+# openamp sources (located on host)
+openamp/
+
+# Result build artifacts which may be copied out of container
+*.qemu-sd
