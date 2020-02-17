@@ -1,0 +1,17 @@
+
+INHERIT += "externalsrc"
+
+PREFERRED_PROVIDER_virtual/open-amp = "open-amp"
+PREFERRED_PROVIDER_virtual/libmetal = "libmetal"
+EXTERNALSRC_pn-open-amp = "/home/build/prj/openamp/open-amp"
+EXTERNALSRC_pn-libmetal = "/home/build/prj/openamp/libmetal"
+RM_WORK_EXCLUDE += "open-amp"
+RM_WORK_EXCLUDE += "libmetal"
+PREFERRED_PROVIDER_virtual/openamp-fw-echo-testd = "openamp-fw-echo-testd"
+EXTERNALSRC_pn-openamp-fw-echo-testd = "/home/build/prj/openamp/embeddedsw"
+RM_WORK_EXCLUDE += "openamp-fw-echo-testd"
+
+DISTRO_FEATURES_append = " openamp "
+
+IMAGE_INSTALL_append = " open-amp kernel-modules open-amp-demos packagegroup-petalinux-openamp "
+CORE_IMAGE_EXTRA_INSTALL_append = " open-amp kernel-modules open-amp-demos "
