@@ -76,7 +76,7 @@ whilst others are optional.
 * (optional) [Create certificates](https://validation.linaro.org/static/docs/v2/pipeline-server.html#create-certificates) on the slave.
   `sudo /usr/share/lava-dispatcher/create_certificate.py foo_slave_1`
   This can be done in two ways:
-  * by running "docker-compose exec -it docker-compose_lava-dispatcher_1 bash"
+  * by running "docker exec -it docker-compose_lava-dispatcher_1 bash"
   (for this to work you'd need to build and run the containers first - see
   below).
   * alternatively you can create the certificates on system which has LAVA
