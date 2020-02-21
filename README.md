@@ -113,9 +113,10 @@ port forwarding so that ports 5555 and 5556 are open to the public.`
 
 ## Configuration (advanced, for physical DUT purposes)
 
-Make sure you went through the basic configuration first, it is mandatory for
-this step. In order to run test jobs on physical devices we will need a couple
-of additional setup steps:
+If you're setting up a standalone dispatcher container, make sure you go
+through the above configuration first, it is mandatory for this step.
+In order to run test jobs on physical devices we will need a couple of
+additional setup steps:
 
 * PDU control:
   * The dispatcher docker container will already download pdu scripts from
