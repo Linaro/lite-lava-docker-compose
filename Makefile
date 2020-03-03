@@ -43,7 +43,7 @@ install:
 lava-setup: lava-user lava-identity lava-boards
 
 lava-user:
-	@echo -n "Input LAVA admin user passwd: "; \
+	@echo -n "Input password for LAVA admin user to be created: "; \
 	read passwd; \
 	test -n "$$passwd" && docker exec -it lava-server lava-server manage users add $(LAVA_USER) --superuser --staff --passwd $$passwd || true
 	@echo
