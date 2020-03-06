@@ -5,9 +5,13 @@ protocols:
     roles:
       device:
         device_type: frdm-k64f
+        tags:
+        - zephyr-net
         count: 1
       host:
         device_type: docker
+        tags:
+        - zephyr-net
         count: 1
 
 timeouts:
@@ -59,8 +63,8 @@ actions:
     role: [host]
     to: docker
     image:
-        name: busybox
-        local: true
+        name: debian:buster
+        local: false
 
 - boot:
     role: [host]
@@ -72,28 +76,30 @@ actions:
 - test:
     role: [host]
     timeout:
-      seconds: 50
+      seconds: 60
     interactive:
     - name: ping
-      prompts: ["/ # "]
+      prompts: ["/# ", "/ # "]
       echo: discard
       script:
       # Just wait for prompt
       - command:
+      # Just to check that local address has expected IP
+      - command: "ip address"
       # Wait for device to boot
       - command: "sleep 12"
 
       - command: "ping -c10 192.0.2.1"
         name: ping_default_10_times
         successes:
-        - message: "10 packets transmitted, 10 packets received, 0% packet loss"
+        - message: "10 packets transmitted, 10 received, 0% packet loss"
 
       - command: "ping -s1472 -c10 192.0.2.1"
         name: ping_full_eth_frame_10_times
         successes:
-        - message: "10 packets transmitted, 10 packets received, 0% packet loss"
+        - message: "10 packets transmitted, 10 received, 0% packet loss"
 
       - command: "ping -i0.01 -s1472 -c1000 192.0.2.1"
         name: ping_flood_10ms_full_eth_frame_1000_times
         successes:
-        - message: "1000 packets transmitted, 1000 packets received, 0% packet loss"
+        - message: "1000 packets transmitted, 1000 received, 0% packet loss"
