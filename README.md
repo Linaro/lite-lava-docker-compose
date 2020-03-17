@@ -75,10 +75,12 @@ whilst others are optional.
   is using encryption for master-slave communication.
 * (optional) [Create certificates](https://validation.linaro.org/static/docs/v2/pipeline-server.html#create-certificates) on the slave.
   `sudo /usr/share/lava-dispatcher/create_certificate.py foo_slave_1`
-  This can be done in two ways:
+  This can be done in three ways:
   * by running "docker exec -it docker-compose_lava-dispatcher_1 bash"
   (for this to work you'd need to build and run the containers first - see
   below).
+  * by using published container images:
+  `docker run -v $PWD:/tmp/certs --rm lavasoftware/lava-dispatcher /usr/share/lava-common/create_certificate.py --directory  /tmp/certs foo_slave_1`
   * alternatively you can create the certificates on system which has LAVA
     packages already installed.
 * (optional) Copy public certificate from master and the private slave
