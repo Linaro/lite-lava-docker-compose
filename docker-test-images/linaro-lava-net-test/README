@@ -1,0 +1,10 @@
+This directory contain definition for a "host" docker image used for
+networking testing. It contains various networking tools and utilities
+which are or can be useful for networking testing (not all tools
+installed in the image may be used currently).
+
+A testing process is usually comprised of a multinode LAVA job, where
+this image is booted in a docker "virtual device", to represent a "host"
+side of networking connection, and tools installed in the image are
+used to access an embedded board as a "device under test" (or vice-versa,
+for tests where host is a server and device is a client).
