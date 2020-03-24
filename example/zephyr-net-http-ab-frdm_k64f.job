@@ -1,0 +1,88 @@
+job_name: zephyr-net-http-ab
+
+protocols:
+  lava-multinode:
+    roles:
+      device:
+        device_type: frdm-k64f
+        tags:
+        - zephyr-net
+        count: 1
+      host:
+        device_type: docker
+        tags:
+        - zephyr-net
+        count: 1
+
+timeouts:
+  job:
+    minutes: 8
+  action:
+    minutes: 1
+visibility: public
+
+actions:
+
+- deploy:
+    role: [device]
+    to: tmpfs
+    images:
+        zephyr:
+          url: 'file:///test-images/frdm_k64f/dumb_http_server/zephyr-v1.14.0-5799-g42c5b0a7fafa.bin'
+
+- boot:
+    role: [device]
+    method: cmsis-dap
+
+- test:
+    role: [device]
+    timeout:
+        seconds: 20
+    interactive:
+    - name: 1_zephyr_banner
+      prompts: ["Booting Zephyr OS"]
+      script:
+      # Just wait for prompt
+      - command:
+        name: result
+    - name: 2_ip_addr_assigned
+      prompts: ["IPv4 address: "]
+      script:
+      - command:
+        name: result
+
+
+- deploy:
+    role: [host]
+    to: docker
+    image:
+        name: pfalcon/linaro-lava-net-test:v1
+        #local: true
+
+- boot:
+    role: [host]
+    method: docker
+    command: ""
+    prompts:
+    - '/ #'
+
+- test:
+    role: [host]
+    timeout:
+      seconds: 300
+    interactive:
+    - name: apache_bench
+      prompts: ["/# ", "/ # "]
+      echo: discard
+      script:
+      # Just wait for prompt
+      - command:
+      # Just to check that local address has expected IP
+      - command: "ip address"
+      # Wait for device to boot
+      - command: "sleep 12"
+
+      - command: "ab -n1000 http://192.0.2.1:8080/"
+        name: ab_default_1000_times
+        successes:
+        - message: "Complete requests: *1000\r?\nFailed requests: *0\r?\n"
