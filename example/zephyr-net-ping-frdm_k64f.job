@@ -63,8 +63,8 @@ actions:
     role: [host]
     to: docker
     image:
-        name: debian:buster
-        local: false
+        name: pfalcon/linaro-lava-net-test:v1
+        #local: true
 
 - boot:
     role: [host]
