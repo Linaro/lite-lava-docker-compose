@@ -131,8 +131,9 @@ services:
     - worker-tftp:/srv/tftp
 
   lava-dispatcher-webserver:
-    build:
-      context: ./httpd
+    image: httpd
+    volumes:
+    - ./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
     ports:
       - 80
     volumes:
