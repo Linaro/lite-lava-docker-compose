@@ -1,0 +1,84 @@
+job_name: zephyr-net-big_http_download
+
+protocols:
+  lava-multinode:
+    roles:
+      device:
+        device_type: frdm-k64f
+        tags:
+        - zephyr-net
+        count: 1
+      host:
+        device_type: docker
+        tags:
+        - zephyr-net
+        count: 1
+
+timeouts:
+  job:
+    minutes: 30
+  action:
+    minutes: 1
+visibility: public
+
+actions:
+
+- deploy:
+    role: [device]
+    to: tmpfs
+    images:
+        zephyr:
+          url: 'file:///test-images/frdm_k64f/big_http_download/zephyr-v2.2.0-1442-g4215968b74.bin'
+
+- boot:
+    role: [device]
+    method: cmsis-dap
+
+- test:
+    role: [device]
+    timeout:
+        seconds: 1200
+    interactive:
+    - name: 1_zephyr_banner
+      prompts: ["Booting Zephyr OS"]
+      script:
+      # Just wait for prompt
+      - command:
+        name: result
+    - name: 2_finished
+      prompts: ["Finished downloading."]
+      script:
+      - command:
+        name: result
+
+
+- deploy:
+    role: [host]
+    to: docker
+    image:
+        name: pfalcon/linaro-lava-net-test:v2
+        #local: true
+
+- boot:
+    role: [host]
+    method: docker
+    command: ""
+    prompts:
+    - '/ #'
+
+- test:
+    role: [host]
+    timeout:
+      seconds: 1500
+    interactive:
+    - name: apache2
+      prompts: ["/# ", "/ # "]
+      echo: discard
+      script:
+      # Just wait for prompt
+      - command:
+      # Just to check that local address has expected IP
+      - command: "ip address"
+      - command: "service apache2 start"
+      # Wait for device to boot
+      - command: "sleep 1200"
