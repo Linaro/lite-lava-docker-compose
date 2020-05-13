@@ -69,6 +69,14 @@ services:
       LAVA_ADMIN_PASSWORD: "${DC_LAVA_ADMIN_PASSWORD}"
     restart: unless-stopped
 
+  lava-coordinator:
+    image: ${DC_SERVER_IMAGE}
+    environment:
+      SERVICES: "lava-coordinator"
+    ports:
+    - 3079:3079
+    restart: unless-stopped
+
   apache2:
     image: ${DC_SERVER_IMAGE}
     volumes:
