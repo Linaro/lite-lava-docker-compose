@@ -65,6 +65,8 @@ services:
     environment:
       SERVICES: "gunicorn"
       BIND: "--bind lava-server:8000"
+      LAVA_ADMIN_USERNAME: "${DC_LAVA_ADMIN_USERNAME}"
+      LAVA_ADMIN_PASSWORD: "${DC_LAVA_ADMIN_PASSWORD}"
     restart: unless-stopped
 
   apache2:
