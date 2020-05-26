@@ -8,14 +8,17 @@ LAVA_IDENTITY = dispatcher
 
 
 all:
+	contrib/monitor-images.sh $(LAVA_IDENTITY) &
 	sudo contrib/udev-forward.py -i lava-dispatcher &
 	docker-compose up
 
 stop:
+	pkill -f monitor-images.sh
 	-sudo pkill udev-forward.py
 	docker-compose stop
 
 clean:
+	pkill -f monitor-images.sh
 	-sudo pkill udev-forward.py
 	docker-compose rm -vsf
 	docker volume rm -f lava-server-pgdata lava-server-joboutput lava-server-devices lava-server-health-checks
