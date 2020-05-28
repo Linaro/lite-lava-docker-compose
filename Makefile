@@ -7,7 +7,10 @@ LAVA_USER = admin
 LAVA_IDENTITY = dispatcher
 
 
+# sudo echo below is guaranteedly get a sudo password prompt and provide input
+# (may be problematic in 2nd command with "&").
 all:
+	sudo echo
 	sudo contrib/udev-forward.py -i lava-dispatcher &
 	docker-compose up
 
