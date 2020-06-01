@@ -3,13 +3,13 @@ job_name: zephyr-net-http-ab
 protocols:
   lava-multinode:
     roles:
-      device:
-        device_type: frdm-k64f
+      host:
+        device_type: docker
         tags:
         - zephyr-net
         count: 1
-      host:
-        device_type: docker
+      device:
+        device_type: frdm-k64f
         tags:
         - zephyr-net
         count: 1
