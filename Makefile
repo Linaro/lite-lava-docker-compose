@@ -44,6 +44,7 @@ board-configs:
 	-mv ser2net/ser2net.conf ser2net/ser2net.conf.old
 	touch ser2net/ser2net.conf
 	@echo
+	-mv contrib/LAVA.rules contrib/LAVA.rules.old
 	contrib/make-board-files.sh devices
 
 # Make any preparation steps (currently none) and build docker-compose images.
