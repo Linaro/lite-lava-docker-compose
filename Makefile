@@ -117,6 +117,16 @@ lava-boards:
 	-lavacli -i $(LAVA_IDENTITY) devices dict set frdm-k64f-01 devices/frdm-k64f-01.jinja2
 	lavacli -i $(LAVA_IDENTITY) devices tags add frdm-k64f-01 zephyr-net
 
+	-lavacli -i $(LAVA_IDENTITY) device-types add cc3220SF
+	-lavacli -i $(LAVA_IDENTITY) devices add --type cc3220SF --worker lava-dispatcher cc3220SF-01
+	-lavacli -i $(LAVA_IDENTITY) devices dict set cc3220SF-01 devices/cc3220SF-01.jinja2
+	lavacli -i $(LAVA_IDENTITY) devices tags add cc3220SF-01 zephyr-net
+
+	-lavacli -i $(LAVA_IDENTITY) device-types add cc13x2-launchpad
+	-lavacli -i $(LAVA_IDENTITY) devices add --type cc13x2-launchpad --worker lava-dispatcher cc13x2-launchpad-01
+	-lavacli -i $(LAVA_IDENTITY) devices dict set cc13x2-launchpad-01 devices/cc13x2-launchpad-01.jinja2
+	lavacli -i $(LAVA_IDENTITY) devices tags add cc13x2-launchpad-01 zephyr-net
+
 testjob:
 	lavacli -i $(LAVA_IDENTITY) jobs submit example/micropython-interactive.job
 
