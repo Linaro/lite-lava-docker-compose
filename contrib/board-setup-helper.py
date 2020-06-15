@@ -53,6 +53,7 @@ def ser2net(dev, ser2net_file):
 
 def get_device_numbers(serial_no, dev_type, board_file, ser2net_file):
     result = None, None
+    found_tty = False
     context = pyudev.Context()
 
     devices = context.list_devices()
@@ -76,8 +77,9 @@ def get_device_numbers(serial_no, dev_type, board_file, ser2net_file):
                     for l in c.device_links:
                         if "by-id" in l:
                             port = ser2net(l, ser2net_file)
-                            if port:
+                            if (port and not found_tty):
                                 board_jinja.write("{%% set connection_command = 'telnet ser2net %d' %%}\n" % port)
+                                found_tty = True #If there are multiple serial ports, connect to the first one
             break
 
     if dev_type == "frdm-k64f":
