@@ -53,16 +53,19 @@ install:
 lava-setup: lava-user lava-identity lava-boards
 
 lava-user:
-	@echo -n "Input password for LAVA 'admin' user to be created: "; \
+	@echo -n "Input password for the LAVA 'admin' user to be created: "; \
 	read passwd; \
 	test -n "$$passwd" && docker exec -it lava-server lava-server manage users add $(LAVA_USER) --superuser --staff --passwd $$passwd || true
 	@echo
-	@echo "Now login at http://$(LAVA_HOST)/accounts/login/?next=/api/tokens/ and create an auth token (long sequence of chars)"
+	@echo "Now login with username: admin, passwd: (entered above) at:"
+	@echo "http://$(LAVA_HOST)/accounts/login/?next=/api/tokens/"
+	@echo "and create an auth token (long sequence of chars)."
+	@echo "(Trying to open this link in browser for you.)"
 	-xdg-open http://$(LAVA_HOST)/accounts/login/?next=/api/tokens/
 
 lava-identity:
 	@echo
-	@echo -n "Enter auth token: "; \
+	@echo -n "Enter the auth token that you created: "; \
 	read token; \
 	test -n "$$token" && lavacli identities add --username $(LAVA_USER) --token $$token --uri http://$(LAVA_HOST)/RPC2 $(LAVA_IDENTITY) || true
 	lavacli -i dispatcher system version
