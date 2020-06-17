@@ -72,10 +72,8 @@ lava-identity:
 	lavacli -i dispatcher system version
 
 lava-boards:
-	-lavacli -i $(LAVA_IDENTITY) device-types add frdm-k64f
-	-lavacli -i $(LAVA_IDENTITY) devices add --type frdm-k64f --worker lava-dispatcher frdm-k64f-01
-	-lavacli -i $(LAVA_IDENTITY) devices dict set frdm-k64f-01 devices/frdm-k64f-01.jinja2
-	lavacli -i $(LAVA_IDENTITY) devices tags add frdm-k64f-01 zephyr-net
+	# Start with creating "virtual devices", which work in any setup,
+	# without additional hardware.
 
 	-lavacli -i $(LAVA_IDENTITY) device-types add qemu
 	-lavacli -i $(LAVA_IDENTITY) devices add --type qemu --worker lava-dispatcher qemu-01
@@ -85,9 +83,6 @@ lava-boards:
 	lavacli -i $(LAVA_IDENTITY) devices dict set qemu-zephyr-01 devices/qemu-zephyr-01.jinja2
 	lavacli -i $(LAVA_IDENTITY) devices tags add qemu-zephyr-01 qemu-zephyr
 
-	-lavacli -i $(LAVA_IDENTITY) device-types add musca_a
-	lavacli -i $(LAVA_IDENTITY) device-types template set musca_a device-types/musca_a.jinja2
-
 	-lavacli -i $(LAVA_IDENTITY) device-types add docker
 	-lavacli -i $(LAVA_IDENTITY) devices add --type docker --worker lava-dispatcher docker-01
 	lavacli -i $(LAVA_IDENTITY) devices dict set docker-01 devices/docker-01.jinja2
@@ -95,6 +90,17 @@ lava-boards:
 	-lavacli -i $(LAVA_IDENTITY) devices add --type docker --worker lava-dispatcher docker-02
 	lavacli -i $(LAVA_IDENTITY) devices dict set docker-02 devices/docker-generic.jinja2
 	lavacli -i $(LAVA_IDENTITY) devices tags add docker-02 inet
+
+	# Start with creating "virtual devices", which work in any setup,
+	# without additional hardware.
+
+	-lavacli -i $(LAVA_IDENTITY) device-types add musca_a
+	lavacli -i $(LAVA_IDENTITY) device-types template set musca_a device-types/musca_a.jinja2
+
+	-lavacli -i $(LAVA_IDENTITY) device-types add frdm-k64f
+	-lavacli -i $(LAVA_IDENTITY) devices add --type frdm-k64f --worker lava-dispatcher frdm-k64f-01
+	-lavacli -i $(LAVA_IDENTITY) devices dict set frdm-k64f-01 devices/frdm-k64f-01.jinja2
+	lavacli -i $(LAVA_IDENTITY) devices tags add frdm-k64f-01 zephyr-net
 
 	-lavacli -i $(LAVA_IDENTITY) device-types add cc3220SF
 	-lavacli -i $(LAVA_IDENTITY) devices add --type cc3220SF --worker lava-dispatcher cc3220SF-01
