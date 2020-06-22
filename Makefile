@@ -2,9 +2,9 @@
 LAVA_HOST = localhost
 # LAVA user to create/use.
 LAVA_USER = admin
-# lavacli "identity" (cached credential name) for the above user, to submit jobs
-# "dispatcher" is legacy name from the original instructions.
-LAVA_IDENTITY = dispatcher
+# lavacli "identity" (cached credentials name) for the above user,
+# to submit jobs, etc.
+LAVA_IDENTITY = lava-docker
 
 
 # sudo echo below is guaranteedly get a sudo password prompt and provide input
@@ -69,7 +69,7 @@ lava-identity:
 	@echo -n "Enter the auth token that you created: "; \
 	read token; \
 	test -n "$$token" && lavacli identities add --username $(LAVA_USER) --token $$token --uri http://$(LAVA_HOST)/RPC2 $(LAVA_IDENTITY) || true
-	lavacli -i dispatcher system version
+	lavacli -i $(LAVA_IDENTITY) system version
 
 lava-boards:
 	# Start with creating "virtual devices", which work in any setup,
@@ -113,7 +113,7 @@ lava-boards:
 	lavacli -i $(LAVA_IDENTITY) devices tags add cc13x2-launchpad-01 zephyr-net
 
 testjob:
-	lavacli -i dispatcher jobs submit example/micropython-interactive.job
+	lavacli -i $(LAVA_IDENTITY) jobs submit example/micropython-interactive.job
 
 dispatcher-shell:
 	docker exec -it lava-dispatcher bash
