@@ -1,0 +1,50 @@
+# Zephyr JOB definition for disco-l475-iot1
+device_type: 'disco-l475-iot1'
+job_name: 'zephyr-upstream tests-subsys-logging-log_list-logging-log_list-zephyr'
+
+timeouts:
+  job:
+    minutes: 3
+  action:
+    minutes: 3
+  actions:
+    wait-usb-device:
+      seconds: 40
+
+priority: medium
+visibility: public
+
+actions:
+- deploy:
+    timeout:
+      minutes: 3
+    to: tmpfs
+    images:
+        zephyr:
+          url: 'file:///test-images/disco_l475_iot1/logging.log_list/zephyr.bin'
+
+- boot:
+    method: cmsis-dap
+    timeout:
+      minutes: 1
+
+- test:
+    timeout:
+      minutes: 2
+    monitors:
+    - name: 'tests-subsys-logging-log_list-logging-log_list-zephyr'
+      start: (tc_start\(\)|starting .*test|BOOTING ZEPHYR OS)
+      end: PROJECT EXECUTION
+      pattern: (?P<result>(PASS|FAIL))\s-\s(?P<test_case_id>\w+)\r\n
+      fixupdict:
+        PASS: pass
+        FAIL: fail
+
+metadata:
+  build-url: https://ci.linaro.org/job/zephyr-upstream/PLATFORM=disco_l475_iot1,ZEPHYR_TOOLCHAIN_VARIANT=zephyr,label=docker-xenial-amd64-13/3708/
+  build-log: https://ci.linaro.org/job/zephyr-upstream/PLATFORM=disco_l475_iot1,ZEPHYR_TOOLCHAIN_VARIANT=zephyr,label=docker-xenial-amd64-13/3708//consoleText
+  zephyr-gcc-variant: zephyr
+  platform: disco_l475_iot1
+  git-url: https://git.linaro.org/zephyrproject-org/zephyr.git
+  git-commit: 193fb971
+
