@@ -10,6 +10,9 @@ ENV JLINK_URL="https://www.segger.com/downloads/jlink/${JLINK_DEB}"
 ENV ZEPHYR_HOST_TOOLS="zephyr-sdk-x86_64-hosttools-standalone-0.9.sh"
 ENV ZEPHYR_HOST_TOOLS_URL="https://builds.zephyrproject.org/sdk/0.10.3/${ZEPHYR_HOST_TOOLS}"
 
+ENV http_proxy=http://frq07517:%23%6a%76%62%31%2c%74%76%62%31%21%21@lps5.sgp.st.com:8080
+ENV https_proxy=http://frq07517:%23%6a%76%62%31%2c%74%76%62%31%21%21@lps5.sgp.st.com:8080
+
 COPY lava-coordinator.sh /root/entrypoint.d/
 
 RUN apt-get update && \

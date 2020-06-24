@@ -1,10 +1,2 @@
-# Example LAVA.rules for USB passthrough to container
-#
-# Assumes that usb-passthrough script is installed in
-# /usr/local/bin/passthrough
-
-# Pass all usb devices (TTY, block, CDC) to lava-dispatcher container
-# FRDM-K64F
-ACTION=="add", ENV{ID_SERIAL_SHORT}=="MYSERIALNUM", RUN+="/usr/local/bin/usb-passthrough -a -d %E{ID_SERIAL_SHORT} -i lava-dispatcher"
-# Pass TTY through to lava-ser2net container
-ACTION=="add", SUBSYSTEM=="tty", ENV{ID_SERIAL_SHORT}=="MYSERIALNUM", RUN+="/usr/local/bin/usb-passthrough -a -d %E{ID_SERIAL_SHORT} -i lava-ser2net"
+ACTION=="add", ENV{ID_SERIAL_SHORT}=="0240000033514e450011500585d40028e981000097969900", RUN+="/usr/local/bin/usb-passthrough -a -d %E{ID_SERIAL_SHORT} -i lava-dispatcher"
+ACTION=="add", SUBSYSTEM=="tty", ENV{ID_SERIAL_SHORT}=="0240000033514e450011500585d40028e981000097969900", RUN+="/usr/local/bin/usb-passthrough -a -d %E{ID_SERIAL_SHORT} -i lava-ser2net"
