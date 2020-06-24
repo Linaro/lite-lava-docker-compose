@@ -36,6 +36,8 @@ services:
     - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
     - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
     - ./overlays/lava-server/etc/lava-server/lava-master:/etc/lava-server/lava-master:ro
+    - ./overlays/lava-master/etc/lava-server/env.yaml:/etc/lava-server/env.yaml:ro
+
     depends_on:
     - db
     environment:
