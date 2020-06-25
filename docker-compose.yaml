@@ -121,7 +121,8 @@ services:
       https_proxy: "${https_proxy}"
       ftp_proxy: "${ftp_proxy}"
     volumes:
-    - /run/udev/control:/run/udev/control:ro # libudev expects it for udev events
+    - /var/run/docker.sock:/var/run/docker.sock # allow to use docker inside this container
+    - /run/udev:/run/udev:ro # libudev expects it for udev events
     - /boot:/boot:ro
     - /lib/modules:/lib/modules:ro
     - '/dev/bus:/dev/bus:ro' # required for USB devices
