@@ -62,6 +62,7 @@ def get_device_numbers(serial_no, dev_type, board_file, ser2net_file):
 
     board_jinja.write("{%% extends '%s.jinja2' %%}\n" % dev_type)
     board_jinja.write("{%% set board_id = '%s' %%}\n" % serial_no)
+    board_jinja.write("{%% set device_info = [{'board_id': '%s'}] %%}\n" % serial_no)
 
     for device in devices:
         serial = device.attributes.get("serial")
