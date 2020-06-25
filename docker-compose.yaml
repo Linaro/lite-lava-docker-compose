@@ -137,6 +137,9 @@ services:
 #    - type: bind
 #      source: ../lava/lava_common
 #      target: /usr/lib/python3/dist-packages/lava_common
+#    - type: bind
+#      source: ../lava/lava_dispatcher_host
+#      target: /usr/lib/python3/dist-packages/lava_dispatcher_host
 
   ser2net:
     container_name: lava-ser2net
