@@ -121,7 +121,7 @@ services:
       MASTER_URL: "tcp://lava-master:5556"
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock # allow to use docker inside this container
-    - /run/udev/control:/run/udev/control:ro # libudev expects it for udev events
+    - /run/udev:/run/udev:ro # libudev expects it for udev events
     - /boot:/boot:ro
     - /lib/modules:/lib/modules:ro
     - ./test-images:/test-images:ro
