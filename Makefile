@@ -50,6 +50,9 @@ install:
 	sudo cp contrib/LAVA.rules /etc/udev/rules.d/
 	sudo cp contrib/usb-passthrough /usr/local/bin/
 	sudo udevadm control --reload
+	# This dir gets bind-mounted to dispatcher container and sub-containers
+	# it runs, to allow access to downloaded images across them.
+	sudo mkdir -p /var/lib/lava/dispatcher/tmp/
 
 lava-setup: lava-user lava-identity lava-boards
 
