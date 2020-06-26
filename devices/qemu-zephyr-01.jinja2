@@ -1,7 +1,8 @@
 {% extends 'qemu.jinja2' %}
 {% set mac_addr = 'DE:AD:BE:EF:06:01' %}
 {% set memory = 1024 %}
-{% set netdevice = 'tap' %}
+{# {% set netdevice = 'tap' %} #}
+{% set netdevice = 'user' %}
 {% block qemu_method %}
         parameters:
           command:
