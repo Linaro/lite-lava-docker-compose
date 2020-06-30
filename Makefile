@@ -34,7 +34,7 @@ clean-env:
 # before "install" target.
 board-configs:
 	@echo "Note: you should have *all* of your boards connected to USB before running this."
-	@echo "Press Ctrl+C to break if not. Review results carefully afterwards."
+	@echo "Press Ctrl+C to break if not, or Enter to continue. Review results carefully afterwards."
 	@read dummy
 	-mv ser2net/ser2net.conf ser2net/ser2net.conf.old
 	touch ser2net/ser2net.conf
