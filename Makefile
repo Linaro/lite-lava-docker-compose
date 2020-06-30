@@ -94,8 +94,18 @@ lava-boards:
 	lavacli -i $(LAVA_IDENTITY) devices dict set docker-02 devices/docker-generic.jinja2
 	lavacli -i $(LAVA_IDENTITY) devices tags add docker-02 inet
 
-	# Start with creating "virtual devices", which work in any setup,
-	# without additional hardware.
+	# Now create LAVA device types/device for real hardware boards. Note
+	# that these require actual device configuration files for specific
+	# boards, which are different from a developer to developer, and
+	# thus are not included in the common "lite" branch. You're expected to
+	# generate these files locally, and ideally, store in a personal fork
+	# of the repository. See the wiki page,
+	# https://collaborate.linaro.org/pages/viewpage.action?pageId=118293253#GettingStartedwithLAVA,Docker,andaFRDMK64F:-Capturinglocalboardconfigurationforsemi-automatedsetup
+	# for more info.
+	# Note that if you run directly from the "lite" branch, the setup will
+	# still succeed (because various commands below are prefixed with "-"
+	# to make them non-fatal). In this case, you will be able to use
+	# virtual devices above, but not hardware boards below.
 
 	-lavacli -i $(LAVA_IDENTITY) device-types add musca_a
 	lavacli -i $(LAVA_IDENTITY) device-types template set musca_a device-types/musca_a.jinja2
