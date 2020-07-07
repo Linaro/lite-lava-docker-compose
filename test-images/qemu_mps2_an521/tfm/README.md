@@ -1,5 +1,7 @@
-This directory contains a test image that can be used with QEMU 4.0+ to
+This directory contains a test image that can be used with QEMU 5.0+ to
 verify TF-M builds.
+
+## TF-M Build Script
 
 The image was built using the following build script and TF-M, based on
 commit `b157dca40dcf2051a0420cb16d659a6aa69335d7`:
@@ -51,11 +53,15 @@ arm-none-eabi-objcopy -S --gap-fill 0xff -O ihex \
 srec_cat tfm_s.hex -Intel tfm_ns.hex -Intel -o tfm_full.hex -Intel
 ```
 
+## Manually Running the Image
+
 The output image (`tfm_full_b157dca4.hex`) can be manually run as follows:
 
 ```bash
 qemu-system-arm -M mps2-an521 -device loader,file=tfm_full_b157dca4.hex -serial stdio
 ```
+
+### Output
 
 And should produce the following (truncated) output:
 
@@ -93,5 +99,8 @@ Test suite 'AuditLog non-secure interface test (TFM_AUDIT_TEST_1XXX)' has  PASSE
 Test suite 'Core non-secure positive tests (TFM_CORE_TEST_1XXX)' has  PASSED
 ```
 
+## Docker Image
+
 This image is intended to be run with the `docker-test-images/qemu5` docker
-container.
+container, or alternatively from the `kevintownsend/lite-qemu5:v1` image on
+DockerHub.
