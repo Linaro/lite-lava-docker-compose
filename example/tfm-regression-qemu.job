@@ -1,4 +1,4 @@
-job_name: 'qemu-tfm-regression'
+job_name: 'tfm-regression-qemu'
 
 device_type: qemu
 
@@ -17,6 +17,8 @@ context:
   machine: mps2-an521
   serial: '-serial mon:stdio'
   vga: '-vga none'
+  memory: 16M
+  model: model=lan9118
 
 actions:
 - deploy:
@@ -25,7 +27,8 @@ actions:
     to: tmpfs
     images:
         tfm:
-          image_arg: '-kernel {tfm}'
+          image_arg: '-device loader,file={tfm}'
+          #url: 'file:///test-images/qemu_mps2_an521/tfm/tfm_full_b157dca4.hex'
           url: https://people.linaro.org/~kevin.townsend/lava/an521_tfm_full.hex
 
 - boot:
