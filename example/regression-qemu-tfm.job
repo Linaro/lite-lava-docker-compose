@@ -1,0 +1,55 @@
+job_name: 'qemu-tfm-regression'
+
+device_type: qemu
+
+timeouts:
+  job:
+    seconds: 300
+  action:
+    seconds: 300
+
+priority: medium
+visibility: public
+
+context:
+  arch: arm
+  cpu: 'cortex-m33'
+  machine: mps2-an521
+  serial: '-serial mon:stdio'
+  vga: '-vga none'
+
+actions:
+- deploy:
+    timeout:
+      seconds: 100
+    to: tmpfs
+    images:
+        tfm:
+          image_arg: '-kernel {tfm}'
+          url: https://people.linaro.org/~kevin.townsend/lava/an521_tfm_full.hex
+
+- boot:
+    method: qemu
+    timeout:
+      seconds: 300
+    docker:
+      image: kevintownsend/lite-qemu5:v1
+      binary: /usr/bin/qemu-system-arm
+
+- test:
+    timeout:
+      # A reasonable delay is required to pull the docker image
+      seconds: 300
+    monitors:
+    - name: wait-finish
+      # Empty start is ok (will start with the beginning of output)
+      start: ""
+      # Something in the last line of output
+      end: "End of Non-secure test suites"
+      # Regex pattern check
+      pattern: "FAILED"
+
+metadata:
+  # For some reason, LAVA doesn't allow to query by real job name,
+  # so we need to duplicate it as metadata.
+  job_name: 'regression-qemu-tfm'
