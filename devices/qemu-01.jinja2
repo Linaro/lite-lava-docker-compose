@@ -1,6 +1,5 @@
 {% extends 'qemu.jinja2' %}
 {% set mac_addr = 'DE:AD:BE:EF:05:01' %}
-{% set memory = 1024 %}
 {# Configuring tap by default may interfere with running qemu-from-docker. #}
 {# As we currently don't use QEMU for networking, just comment it (but keep handy). #}
 {# {% set netdevice = 'tap' %} #}
