@@ -1,0 +1,89 @@
+# This job shows usage of multinode synchronization between 2 docker
+# virtual devices.
+job_name: multinode-2-dockers-sync
+
+protocols:
+  lava-multinode:
+    roles:
+      docker1:
+        device_type: docker
+        count: 1
+      docker2:
+        device_type: docker
+        count: 1
+
+timeouts:
+  job:
+    minutes: 3
+  action:
+    minutes: 1
+visibility: public
+
+actions:
+
+- deploy:
+    role: [docker1]
+    to: docker
+    image:
+        name: busybox
+        local: true
+
+- boot:
+    role: [docker1]
+    method: docker
+    command: ""
+
+- test:
+    role: [docker1]
+    timeout:
+      seconds: 30
+
+    interactive:
+    - name: boot
+      prompts: ["/ #"]
+      echo: discard
+      script:
+      # wait for prompt
+      - command:
+      - command: ifconfig
+        name: result
+        successes:
+        - message: "inet addr:(?P<ip>\\d+\\.\\d+\\.\\d+\\.\\d+)"
+      - lava-send: booted ipaddr={ip}
+      # Stay around until the other side completes its actions
+      - lava-wait: done
+
+
+- deploy:
+    role: [docker2]
+    to: docker
+    image:
+        name: busybox
+        local: true
+
+- boot:
+    role: [docker2]
+    method: docker
+    command: ""
+    prompts:
+    - '/ #'
+
+- test:
+    role: [docker2]
+    timeout:
+      seconds: 40
+
+    interactive:
+    - name: boot
+      prompts: ["/ #"]
+      echo: discard
+      script:
+      # wait for prompt
+      - command:
+      - command: ifconfig
+      - lava-wait: booted
+      - command: 'echo "Other side has IP: {ipaddr}"'
+      - command: ping -c10 {ipaddr}
+        successes:
+        - message: "10 packets transmitted, 10 packets received, 0% packet loss"
+      - lava-send: done
