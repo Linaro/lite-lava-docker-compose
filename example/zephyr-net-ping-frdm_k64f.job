@@ -37,7 +37,7 @@ actions:
 - test:
     role: [device]
     timeout:
-        seconds: 20
+        seconds: 70
     interactive:
     - name: 1_zephyr_banner
       prompts: ["Booting Zephyr OS"]
@@ -51,12 +51,18 @@ actions:
       - command:
         name: result
 # In latest Zephyr versions appears before "IPv4 address:" message. And anyway,
-# it's driver-specific message, let's keep thsi test generic.
+# it's driver-specific message, let's keep this test generic.
 #    - name: 3_phy_enabled
 #      prompts: ["eth_mcux: Enabled 100M full-duplex mode"]
 #      script:
 #      - command:
 #        name: result
+      - lava-send: booted
+      # Stay around until the other side completes its actions
+      # "delay" is needed because lava-wait's timeout is 30s, which is
+      # too little
+      - delay: 30
+      - lava-wait: done
 
 
 - deploy:
@@ -87,7 +93,7 @@ actions:
       # Just to check that local address has expected IP
       - command: "ip address"
       # Wait for device to boot
-      - command: "sleep 12"
+      - lava-wait: booted
 
       - command: "ping -c10 192.0.2.1"
         name: ping_default_10_times
@@ -103,3 +109,5 @@ actions:
         name: ping_flood_10ms_full_eth_frame_1000_times
         successes:
         - message: "1000 packets transmitted, 1000 received, 0% packet loss"
+
+      - lava-send: done
