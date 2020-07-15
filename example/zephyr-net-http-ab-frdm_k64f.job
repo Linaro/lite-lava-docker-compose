@@ -37,7 +37,7 @@ actions:
 - test:
     role: [device]
     timeout:
-        seconds: 20
+        seconds: 250
     interactive:
     - name: 1_zephyr_banner
       prompts: ["Booting Zephyr OS"]
@@ -50,6 +50,10 @@ actions:
       script:
       - command:
         name: result
+    - lava-send: booted
+    # TODO: delay is workaround for https://git.lavasoftware.org/lava/lava/-/issues/429
+    - delay: 190
+    - lava-wait: done
 
 
 - deploy:
@@ -80,9 +84,11 @@ actions:
       # Just to check that local address has expected IP
       - command: "ip address"
       # Wait for device to boot
-      - command: "sleep 12"
+      - lava-wait: booted
 
       - command: "ab -n1000 http://192.0.2.1:8080/"
         name: ab_default_1000_times
         successes:
         - message: "Complete requests: *1000\r?\nFailed requests: *0\r?\n"
+
+      - lava-send: done
