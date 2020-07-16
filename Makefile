@@ -130,6 +130,11 @@ lava-boards:
 	-lavacli -i $(LAVA_IDENTITY) devices dict set disco-l475-iot1-01 devices/disco-l475-iot1-01.jinja2
 	lavacli -i $(LAVA_IDENTITY) devices tags add disco-l475-iot1-01 zephyr-net
 
+	-lavacli -i $(LAVA_IDENTITY) device-types add nucleo-l552ze-q
+	-lavacli -i $(LAVA_IDENTITY) devices add --type nucleo-l552ze-q --worker lava-dispatcher nucleo-l552ze-q-01
+	-lavacli -i $(LAVA_IDENTITY) devices dict set nucleo-l552ze-q-01 devices/nucleo-l552ze-q-01.jinja2
+	lavacli -i $(LAVA_IDENTITY) devices tags add nucleo-l552ze-q-01 zephyr-net
+
 testjob:
 	lavacli -i $(LAVA_IDENTITY) jobs submit example/micropython-interactive.job
 
