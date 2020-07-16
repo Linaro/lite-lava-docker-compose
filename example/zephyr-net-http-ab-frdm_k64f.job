@@ -50,10 +50,10 @@ actions:
       script:
       - command:
         name: result
-    - lava-send: booted
-    # TODO: delay is workaround for https://git.lavasoftware.org/lava/lava/-/issues/429
-    - delay: 190
-    - lava-wait: done
+      - lava-send: booted
+      # TODO: delay is workaround for https://git.lavasoftware.org/lava/lava/-/issues/429
+      - delay: 190
+      - lava-wait: done
 
 
 - deploy:
