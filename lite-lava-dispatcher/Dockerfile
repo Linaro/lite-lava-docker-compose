@@ -2,6 +2,9 @@ ARG DC_DISPATCHER_IMAGE
 
 FROM ${DC_DISPATCHER_IMAGE}
 
+ENV http_proxy=http://frq07517:pwd@lps5.sgp.st.com:8080
+ENV https_proxy=http://frq07517:pwd@lps5.sgp.st.com:8080
+
 ENV JLINK_DEB="JLink_Linux_V650_x86_64.deb"
 ENV JLINK_URL="https://www.segger.com/downloads/jlink/${JLINK_DEB}"
 ENV ZEPHYR_HOST_TOOLS="zephyr-sdk-x86_64-hosttools-standalone-0.9.sh"
@@ -20,7 +23,7 @@ RUN apt-get update && \
 	dpkg -i ${JLINK_DEB} && \
 	rm ${JLINK_DEB} && \
 	ln -s /opt/SEGGER/JLink/JLinkExe /usr/local/bin && \
-	wget ${ZEPHYR_HOST_TOOLS_URL} -O ${ZEPHYR_HOST_TOOLS} && \
+	wget --no-check-certificate ${ZEPHYR_HOST_TOOLS_URL} -O ${ZEPHYR_HOST_TOOLS} && \
 	chmod a+x ${ZEPHYR_HOST_TOOLS} && \
 	./${ZEPHYR_HOST_TOOLS} -d /opt/zephyr-sdk -y && \
 	rm ${ZEPHYR_HOST_TOOLS} && \
