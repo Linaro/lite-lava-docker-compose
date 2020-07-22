@@ -109,6 +109,11 @@ lava-boards:
 
 	-lavacli -i $(LAVA_IDENTITY) device-types add musca_a
 	lavacli -i $(LAVA_IDENTITY) device-types template set musca_a device-types/musca_a.jinja2
+	# Workaround: device-type template should be on both lava-server and lava-master, but currently
+	# ends up only on lava-server after "lavacli device-types template set" above. So, we copy it
+	# to lava-master manually.
+	# Upstream issue: https://git.lavasoftware.org/lava/pkg/docker-compose/-/issues/4
+	docker cp device-types/musca_a.jinja2 lava-master:/etc/lava-server/dispatcher-config/device-types/
 
 	-lavacli -i $(LAVA_IDENTITY) device-types add frdm-k64f
 	-lavacli -i $(LAVA_IDENTITY) devices add --type frdm-k64f --worker lava-dispatcher frdm-k64f-01
