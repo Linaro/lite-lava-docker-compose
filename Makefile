@@ -139,7 +139,7 @@ testjob:
 	lavacli -i $(LAVA_IDENTITY) jobs submit example/micropython-interactive.job
 
 dispatcher-shell:
-	docker exec -it lava-dispatcher bash
+	docker-compose exec lava-dispatcher bash
 
 server-shell:
-	docker exec -it lava-server bash
+	docker-compose exec lava-server bash
