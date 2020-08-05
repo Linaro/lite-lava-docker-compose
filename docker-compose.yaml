@@ -15,9 +15,9 @@ services:
     image: ${DC_SERVER_IMAGE}
     volumes:
     - joboutput:/var/lib/lava-server/default/media/job-output
-    - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
-    - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
-    - ./overlays/lava-server/etc/lava-server/lava-logs:/etc/lava-server/lava-logs:ro
+    - ./overlays/etc/lava-server/settings.d/01-database.yaml:/etc/lava-server/settings.d/01-database.yaml:ro
+    - ./overlays/etc/lava-server/settings.d/01-events.yaml:/etc/lava-server/settings.d/01-events.yaml:ro
+    - ./overlays/etc/lava-server/lava-logs:/etc/lava-server/lava-logs:ro
     depends_on:
     - db
     environment:
@@ -33,9 +33,9 @@ services:
     volumes:
     - devices:/etc/lava-server/dispatcher-config/devices:ro
     - health-checks:/etc/lava-server/dispatcher-config/health-checks:ro
-    - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
-    - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
-    - ./overlays/lava-server/etc/lava-server/lava-master:/etc/lava-server/lava-master:ro
+    - ./overlays/etc/lava-server/settings.d/01-database.yaml:/etc/lava-server/settings.d/01-database.yaml:ro
+    - ./overlays/etc/lava-server/settings.d/01-events.yaml:/etc/lava-server/settings.d/01-events.yaml:ro
+    - ./overlays/etc/lava-server/lava-master:/etc/lava-server/lava-master:ro
     depends_on:
     - db
     environment:
@@ -48,8 +48,9 @@ services:
     container_name: lava-publisher
     image: ${DC_SERVER_IMAGE}
     volumes:
-    - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
-    - ./overlays/lava-publisher/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
+    - ./overlays/etc/lava-server/settings.d/01-database.yaml:/etc/lava-server/settings.d/01-database.yaml:ro
+    - ./overlays/etc/lava-server/settings.d/01-events.yaml:/etc/lava-server/settings.d/01-events.yaml:ro
+    - ./overlays/etc/lava-server/settings.d/02-publisher.yaml:/etc/lava-server/settings.d/02-publisher.yaml:ro
     environment:
       SERVICES: "lava-publisher"
     ports:
@@ -63,8 +64,9 @@ services:
     - devices:/etc/lava-server/dispatcher-config/devices
     - health-checks:/etc/lava-server/dispatcher-config/health-checks
     - joboutput:/var/lib/lava-server/default/media/job-output
-    - ./overlays/lava-server/etc/lava-server/instance.conf:/etc/lava-server/instance.conf:ro
-    - ./overlays/lava-server/etc/lava-server/settings.conf:/etc/lava-server/settings.conf:ro
+    - ./overlays/etc/lava-server/settings.d/01-database.yaml:/etc/lava-server/settings.d/01-database.yaml:ro
+    - ./overlays/etc/lava-server/settings.d/01-events.yaml:/etc/lava-server/settings.d/01-events.yaml:ro
+    - ./overlays/etc/lava-server/settings.d/01-unsecure.yaml:/etc/lava-server/settings.d/01-unsecure.yaml:ro
       # Example for development
       # If you wanted to point to a local git checkout of lava for development
       # of lava_dispatcher, you can uncomment out the lines below and
@@ -91,7 +93,7 @@ services:
     container_name: apache2
     image: ${DC_SERVER_IMAGE}
     volumes:
-    - ./overlays/lava-server/etc/apache2/sites-available/lava-server.conf:/etc/apache2/sites-available/lava-server.conf:ro
+    - ./overlays/etc/apache2/sites-available/lava-server.conf:/etc/apache2/sites-available/lava-server.conf:ro
     depends_on:
     - lava-server
     environment:

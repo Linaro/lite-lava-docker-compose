@@ -1,0 +1,3 @@
+EVENT_NOTIFICATION: true
+EVENT_TOPIC: "lava-server"
+INTERNAL_EVENT_SOCKET: "tcp://lava-publisher:5557"
