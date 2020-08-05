@@ -1,0 +1,8 @@
+DATABASES:
+  default:
+    ENGINE: "django.db.backends.postgresql"
+    NAME: "lavaserver"
+    USER: "lavaserver"
+    PASSWORD: "lavaserverdbpass"
+    HOST: "db"
+    PORT: 5432
