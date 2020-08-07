@@ -21,7 +21,7 @@ stop:
 clean:
 	-sudo pkill udev-forward.py
 	docker-compose rm -vsf
-	docker volume rm -f lava-server-pgdata lava-server-joboutput lava-server-devices lava-server-health-checks
+	docker volume rm -f lava-server-pgdata lava-server-joboutput lava-server-device-types lava-server-devices lava-server-health-checks worker-http worker-tftp
 
 # Clean host environment to let LAVA setup run w/o issues. As an example,
 # stop ModemManager on Ubuntu, which grabs any new serial device and may

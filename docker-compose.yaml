@@ -31,6 +31,7 @@ services:
     container_name: lava-master
     image: ${DC_SERVER_IMAGE}
     volumes:
+    - device-types:/etc/lava-server/dispatcher-config/device-types:ro
     - devices:/etc/lava-server/dispatcher-config/devices:ro
     - health-checks:/etc/lava-server/dispatcher-config/health-checks:ro
     - ./overlays/etc/lava-server/settings.d/01-database.yaml:/etc/lava-server/settings.d/01-database.yaml:ro
@@ -61,6 +62,7 @@ services:
     container_name: lava-server
     image: ${DC_SERVER_IMAGE}
     volumes:
+    - device-types:/etc/lava-server/dispatcher-config/device-types
     - devices:/etc/lava-server/dispatcher-config/devices
     - health-checks:/etc/lava-server/dispatcher-config/health-checks
     - joboutput:/var/lib/lava-server/default/media/job-output
@@ -157,6 +159,8 @@ services:
 volumes:
   db-data:
     name: lava-server-pgdata
+  device-types:
+    name: lava-server-device-types
   devices:
     name: lava-server-devices
   health-checks:
