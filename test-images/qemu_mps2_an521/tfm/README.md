@@ -3,8 +3,12 @@ verify TF-M builds.
 
 ## TF-M Build Script
 
-The image was built using the following build script and TF-M, based on
-commit `b157dca40dcf2051a0420cb16d659a6aa69335d7`:
+The image was built using the following build script and TF-M codebase
+(https://git.trustedfirmware.org/TF-M/trusted-firmware-m.git), based on
+commit `b157dca40dcf2051a0420cb16d659a6aa69335d7`. The build dependencies
+and initial build setup, required before executing the script below,
+are described in the
+[corresponding TF-M docs section](https://ci.trustedfirmware.org/job/tf-m-build-test-nightly/lastSuccessfulBuild/artifact/build-docs/tf-m_documents/install/doc/user_guide/html/docs/user_guides/tfm_build_instruction.html#tf-m-build-steps).
 
 ```
 #!/bin/bash
@@ -55,10 +59,18 @@ srec_cat tfm_s.hex -Intel tfm_ns.hex -Intel -o tfm_full.hex -Intel
 
 ## Manually Running the Image
 
-The output image (`tfm_full_b157dca4.hex`) can be manually run as follows:
+The output image (`tfm_full_b157dca4.hex`) can be manually run as follows,
+assuming QEMU 5.0+ is installed locally:
 
 ```bash
 qemu-system-arm -M mps2-an521 -device loader,file=tfm_full_b157dca4.hex -serial stdio
+```
+Alternatively, using the "kevintownsend/lite-qemu5:v1" docker image
+described below, it can be run as:
+
+```bash
+docker run --rm -it -v $PWD:/tmp/dir kevintownsend/lite-qemu5:v1 \
+    /usr/bin/qemu-system-arm -cpu cortex-m33 -machine mps2-an521 -serial mon:stdio -nographic -device loader,file=/tmp/dir/tfm_full_b157dca4.hex
 ```
 
 ### Output
@@ -101,6 +113,7 @@ Test suite 'Core non-secure positive tests (TFM_CORE_TEST_1XXX)' has  PASSED
 
 ## Docker Image
 
-This image is intended to be run with the `docker-test-images/qemu5` docker
-container, or alternatively from the `kevintownsend/lite-qemu5:v1` image on
-DockerHub.
+In the LAVA environment, this test image is intended to be run with the
+docker image built from files in `docker-test-images/qemu5/` directory
+(at the top level), which is published to DockerHub under the name
+`kevintownsend/lite-qemu5:v1`.
