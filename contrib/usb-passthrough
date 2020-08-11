@@ -42,7 +42,7 @@ def devnode_props(node):
 
     return (dev_type, major, minor)
 
-def pass_device_into_container(instance, node, serial_no, subsys, links):
+def pass_device_into_container(instance, node, serial_no, links):
     client = docker.from_env()
 
     container = client.containers.get(instance)
@@ -76,7 +76,7 @@ def pass_device_into_container(instance, node, serial_no, subsys, links):
 
     udev_rule.close()
 
-def remove_device_from_container(instance, dev_type, major, minor, node, serial_no, subsys, links):
+def remove_device_from_container(instance, dev_type, major, minor, node, serial_no, links):
     client = docker.from_env()
 
     container = client.containers.get(instance)
@@ -108,7 +108,6 @@ def main():
 
     options = parser.parse_args()
 
-    subsys = os.environ['SUBSYSTEM']
     links = ""
     if ('DEVLINKS' in os.environ):
         links = os.environ['DEVLINKS']
@@ -116,16 +115,16 @@ def main():
     device_node = os.environ['DEVNAME']
 
     if (options.add):
-        pass_device_into_container(options.instance, device_node, options.device_serial, subsys, links)
+        pass_device_into_container(options.instance, device_node, options.device_serial, links)
     else:
         dev_type = "c"
-        if (subsys == "block"):
+        if (os.environ['SUBSYSTEM'] == "block"):
             dev_type = "b"
 
         major = os.environ['MAJOR']
         minor = os.environ['MINOR']
 
-        remove_device_from_container(options.instance, dev_type, major, minor, device_node, options.device_serial, subsys, links)
+        remove_device_from_container(options.instance, dev_type, major, minor, device_node, options.device_serial, links)
 
 
 if __name__ == '__main__':
