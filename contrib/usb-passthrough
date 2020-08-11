@@ -63,10 +63,8 @@ def pass_device_into_container(instance, node, serial_no, subsys, links):
                 "ln -f -s " + node + " " + link + "'"
         container.exec_run(link_cmd)
 
-    udev_file_name = "/etc/udev/rules.d/lava-%s-%s-%s" % (instance, serial_no, subsys)
-    if ('ID_USB_INTERFACE_NUM' in os.environ):
-        udev_file_name += "-if%s" % os.environ['ID_USB_INTERFACE_NUM']
-    udev_file_name += ".rules"
+    sanitize_node = node.replace('/', '-')
+    udev_file_name = "/etc/udev/rules.d/lava-%s-%s%s.rules" % (instance, serial_no, sanitize_node)
 
     udev_rule = open(udev_file_name, "w")
 
@@ -93,10 +91,8 @@ def remove_device_from_container(instance, dev_type, major, minor, node, serial_
         link_cmd = "rm " + link
         container.exec_run(link_cmd)
 
-    udev_file_name = "/etc/udev/rules.d/lava-%s-%s-%s" % (instance, serial_no, subsys)
-    if ('ID_USB_INTERFACE_NUM' in os.environ):
-        udev_file_name += "-if%s" % os.environ['ID_USB_INTERFACE_NUM']
-    udev_file_name += ".rules"
+    node = node.replace('/', '-')
+    udev_file_name = "/etc/udev/rules.d/lava-%s-%s%s.rules" % (instance, serial_no, node)
 
     os.remove(udev_file_name)
 
