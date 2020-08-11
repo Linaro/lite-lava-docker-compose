@@ -26,6 +26,7 @@ import os
 import sys
 import stat
 import docker
+import pyudev
 
 # Example of what a udev rule looks like for using this script
 #
@@ -42,8 +43,10 @@ def devnode_props(node):
 
     return (dev_type, major, minor)
 
-def pass_device_into_container(instance, node, serial_no, links):
+def pass_device_into_container(instance, dev, serial_no):
     client = docker.from_env()
+
+    node = dev.device_node
 
     container = client.containers.get(instance)
 
@@ -58,7 +61,7 @@ def pass_device_into_container(instance, node, serial_no, links):
                      " " + str(major) + " " + str(minor) + "'"
     container.exec_run(create_dev_cmd)
 
-    for link in links.split():
+    for link in dev.device_links:
         link_cmd = "sh -c 'mkdir -p $(dirname " + link + ");" + \
                 "ln -f -s " + node + " " + link + "'"
         container.exec_run(link_cmd)
@@ -107,22 +110,28 @@ def main():
                         help="Add device")
 
     options = parser.parse_args()
-
-    links = ""
-    if ('DEVLINKS' in os.environ):
-        links = os.environ['DEVLINKS']
-
-    device_node = os.environ['DEVNAME']
-
     if (options.add):
-        pass_device_into_container(options.instance, device_node, options.device_serial, links)
+        context = pyudev.Context()
+        for device in context.list_devices():
+            if device.get("ID_SERIAL_SHORT") == options.device_serial:
+                pass_device_into_container(options.instance, device, options.device_serial)
+
+                for child in device.children:
+                    if child.device_node:
+                        pass_device_into_container(options.instance, child, options.device_serial)
+
     else:
+        links = ""
+        if ('DEVLINKS' in os.environ):
+            links = os.environ['DEVLINKS']
+
         dev_type = "c"
         if (os.environ['SUBSYSTEM'] == "block"):
             dev_type = "b"
 
         major = os.environ['MAJOR']
         minor = os.environ['MINOR']
+        device_node = os.environ['DEVNAME']
 
         remove_device_from_container(options.instance, dev_type, major, minor, device_node, options.device_serial, links)
 
