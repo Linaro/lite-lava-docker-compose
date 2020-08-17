@@ -86,6 +86,10 @@ services:
 #      target: /usr/lib/python3/dist-packages/lava_common
     depends_on:
     - db
+    - lava-logs
+    - lava-master
+    - lava-publisher
+    - apache2
     environment:
       SERVICES: "gunicorn"
       BIND: "--bind lava-server:8000"
@@ -96,8 +100,6 @@ services:
     image: ${DC_SERVER_IMAGE}
     volumes:
     - ./overlays/etc/apache2/sites-available/lava-server.conf:/etc/apache2/sites-available/lava-server.conf:ro
-    depends_on:
-    - lava-server
     environment:
       SERVICES: "apache2"
     ports:
