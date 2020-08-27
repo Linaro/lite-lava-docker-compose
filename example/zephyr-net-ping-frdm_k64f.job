@@ -58,10 +58,6 @@ actions:
 #      - command:
 #        name: result
       - lava-send: booted
-      # Stay around until the other side completes its actions
-      # "delay" is needed because lava-wait's timeout is 30s, which is
-      # too little
-      - delay: 30
       - lava-wait: done
 
 
