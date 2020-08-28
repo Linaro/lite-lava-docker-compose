@@ -50,6 +50,7 @@ actions:
       script:
       - command:
         name: result
+      - lava-send: done
 
 
 - deploy:
@@ -80,5 +81,4 @@ actions:
       # Just to check that local address has expected IP
       - command: "ip address"
       - command: "service apache2 start"
-      # Wait for device to boot
-      - command: "sleep 1200"
+      - lava-wait: done
