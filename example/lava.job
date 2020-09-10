@@ -21,7 +21,8 @@ actions:
     to: tmpfs
     images:
         zephyr:
-          url: 'file:///test-images/frdm_k64f/logging.log_list/zephyr.bin'
+          url: "file:///test-images/frdm_k64f/logging.log_list/zephyr-v2.4.0-rc1-55-g6fe1fde9dc.bin"
+          #url: "https://github.com/Linaro/lite-lava-docker-compose/raw/lite/test-images/frdm_k64f/logging.log_list/zephyr-v2.4.0-rc1-55-g6fe1fde9dc.bin"
 
 - boot:
     method: cmsis-dap
