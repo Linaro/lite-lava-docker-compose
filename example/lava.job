@@ -33,7 +33,7 @@ actions:
       minutes: 2
     monitors:
     - name: 'tests-subsys-logging-log_list-logging-log_list-zephyr'
-      start: (tc_start\(\)|starting .*test|BOOTING ZEPHYR OS)
+      start: (tc_start\(\)|starting .*test|Booting Zephyr OS)
       end: PROJECT EXECUTION
       pattern: (?P<result>(PASS|FAIL))\s-\s(?P<test_case_id>\w+)\r\n
       fixupdict:
