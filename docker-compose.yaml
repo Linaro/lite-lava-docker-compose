@@ -10,25 +10,7 @@ services:
     - db-data:/var/lib/postgresql/data
     restart: unless-stopped
 
-  lava-logs:
-    container_name: lava-logs
-    image: ${DC_SERVER_IMAGE}
-    volumes:
-    - joboutput:/var/lib/lava-server/default/media/job-output
-    - ./overlays/etc/lava-server/settings.d/01-database.yaml:/etc/lava-server/settings.d/01-database.yaml:ro
-    - ./overlays/etc/lava-server/settings.d/01-events.yaml:/etc/lava-server/settings.d/01-events.yaml:ro
-    - ./overlays/etc/lava-server/lava-logs:/etc/lava-server/lava-logs:ro
-    depends_on:
-    - db
-    environment:
-      SERVICES: "lava-logs"
-    ports:
-    - 5555:5555
-    restart: unless-stopped
-    stop_grace_period: 20s
-
-  lava-master:
-    container_name: lava-master
+  lava-scheduler:
     image: ${DC_SERVER_IMAGE}
     volumes:
     - device-types:/etc/lava-server/dispatcher-config/device-types:ro
@@ -36,13 +18,11 @@ services:
     - health-checks:/etc/lava-server/dispatcher-config/health-checks:ro
     - ./overlays/etc/lava-server/settings.d/01-database.yaml:/etc/lava-server/settings.d/01-database.yaml:ro
     - ./overlays/etc/lava-server/settings.d/01-events.yaml:/etc/lava-server/settings.d/01-events.yaml:ro
-    - ./overlays/etc/lava-server/lava-master:/etc/lava-server/lava-master:ro
+    - ./overlays/etc/lava-server/lava-scheduler:/etc/lava-server/lava-scheduler:ro
     depends_on:
     - db
     environment:
-      SERVICES: "lava-master"
-    ports:
-    - 5556:5556
+      SERVICES: "lava-scheduler"
     restart: unless-stopped
 
   lava-publisher:
@@ -56,6 +36,7 @@ services:
       SERVICES: "lava-publisher"
     ports:
     - 5500:5500
+    - 8001:8001
     restart: unless-stopped
 
   lava-server:
@@ -69,6 +50,7 @@ services:
     - ./overlays/etc/lava-server/settings.d/01-database.yaml:/etc/lava-server/settings.d/01-database.yaml:ro
     - ./overlays/etc/lava-server/settings.d/01-events.yaml:/etc/lava-server/settings.d/01-events.yaml:ro
     - ./overlays/etc/lava-server/settings.d/01-unsecure.yaml:/etc/lava-server/settings.d/01-unsecure.yaml:ro
+    - ./overlays/etc/lava-server/settings.d/02-autoregister.yaml:/etc/lava-server/settings.d/02-autoregister.yaml:ro
       # Example for development
       # If you wanted to point to a local git checkout of lava for development
       # of lava_dispatcher, you can uncomment out the lines below and
@@ -86,8 +68,6 @@ services:
 #      target: /usr/lib/python3/dist-packages/lava_common
     depends_on:
     - db
-    - lava-logs
-    - lava-master
     - lava-publisher
     - apache2
     environment:
@@ -122,17 +102,26 @@ services:
     - NET_ADMIN # needed for QEMU
     - SYS_ADMIN # needed for usb mass storage
     environment:
-      DISPATCHER_HOSTNAME: "--hostname=lava-dispatcher"
-      LOGGER_URL: "tcp://lava-logs:5555"
-      MASTER_URL: "tcp://lava-master:5556"
+      WORKER_NAME: "--name=${DC_DISPATCHER_HOSTNAME}"
+      URL: "${DC_LAVA_SERVER_HOSTNAME}"
+      http_proxy: "${http_proxy}"
+      https_proxy: "${https_proxy}"
+      ftp_proxy: "${ftp_proxy}"
     volumes:
+    - ./overlays/etc/lava-dispatcher/lava-worker:/etc/lava-dispatcher/lava-worker:ro
     - /var/run/docker.sock:/var/run/docker.sock # allow to use docker inside this container
     - /run/udev:/run/udev:ro # libudev expects it for udev events
     - /boot:/boot:ro
     - /lib/modules:/lib/modules:ro
-    - ./test-images:/test-images:ro
+    - '/dev/bus:/dev/bus:ro' # required for USB devices
+    - '/dev/serial:/dev/serial:ro' # required for serial adapters
+    - '/dev/disk:/dev/disk:ro' # required for SDMux
+    - worker-state:/var/lib/lava/dispatcher/worker/
+    #- worker-http:/var/lib/lava/dispatcher/tmp
      # should be mounted transitively for transitive container access to downloads
     - /var/lib/lava/dispatcher/tmp:/var/lib/lava/dispatcher/tmp
+    - worker-tftp:/srv/tftp
+    - ./test-images:/test-images:ro
       # Example for development
       # If you wanted to point to a local git checkout of lava for development
       # of lava_dispatcher, you can uncomment out the lines below and
@@ -148,6 +137,15 @@ services:
 #    - type: bind
 #      source: ../lava/lava_dispatcher_host
 #      target: /usr/lib/python3/dist-packages/lava_dispatcher_host
+
+  lava-dispatcher-webserver:
+    image: httpd
+    volumes:
+    - ./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+    ports:
+      - 80
+    volumes:
+      - worker-http:/var/lib/lava/dispatcher/tmp
 
   ser2net:
     container_name: lava-ser2net
@@ -169,3 +167,9 @@ volumes:
     name: lava-server-health-checks
   joboutput:
     name: lava-server-joboutput
+  worker-state:
+    name: lava-server-worker-state
+  worker-http:
+    name: lava-server-worker-http
+  worker-tftp:
+    name: lava-server-worker-tftp
