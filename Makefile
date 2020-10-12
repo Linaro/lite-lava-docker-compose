@@ -5,6 +5,8 @@ LAVA_USER = admin
 # lavacli "identity" (cached credentials name) for the above user,
 # to submit jobs, etc.
 LAVA_IDENTITY = lava-docker
+# Name of LAVA worker to which devices are registered/attached.
+LAVA_WORKER = lava-dispatcher
 
 
 # sudo echo below is guaranteedly get a sudo password prompt and provide input
@@ -84,18 +86,18 @@ lava-boards:
 	# without additional hardware.
 
 	-lavacli -i $(LAVA_IDENTITY) device-types add qemu
-	-lavacli -i $(LAVA_IDENTITY) devices add --type qemu --worker lava-dispatcher qemu-01
+	-lavacli -i $(LAVA_IDENTITY) devices add --type qemu --worker $(LAVA_WORKER) qemu-01
 	lavacli -i $(LAVA_IDENTITY) devices dict set qemu-01 devices/qemu-01.jinja2
 
-	-lavacli -i $(LAVA_IDENTITY) devices add --type qemu --worker lava-dispatcher qemu-zephyr-01
+	-lavacli -i $(LAVA_IDENTITY) devices add --type qemu --worker $(LAVA_WORKER) qemu-zephyr-01
 	lavacli -i $(LAVA_IDENTITY) devices dict set qemu-zephyr-01 devices/qemu-zephyr-01.jinja2
 	lavacli -i $(LAVA_IDENTITY) devices tags add qemu-zephyr-01 qemu-zephyr
 
 	-lavacli -i $(LAVA_IDENTITY) device-types add docker
-	-lavacli -i $(LAVA_IDENTITY) devices add --type docker --worker lava-dispatcher docker-01
+	-lavacli -i $(LAVA_IDENTITY) devices add --type docker --worker $(LAVA_WORKER) docker-01
 	lavacli -i $(LAVA_IDENTITY) devices dict set docker-01 devices/docker-01.jinja2
 	lavacli -i $(LAVA_IDENTITY) devices tags add docker-01 zephyr-net
-	-lavacli -i $(LAVA_IDENTITY) devices add --type docker --worker lava-dispatcher docker-02
+	-lavacli -i $(LAVA_IDENTITY) devices add --type docker --worker $(LAVA_WORKER) docker-02
 	lavacli -i $(LAVA_IDENTITY) devices dict set docker-02 devices/docker-generic.jinja2
 	lavacli -i $(LAVA_IDENTITY) devices tags add docker-02 inet
 
@@ -116,22 +118,22 @@ lava-boards:
 	lavacli -i $(LAVA_IDENTITY) device-types template set musca_a device-types/musca_a.jinja2
 
 	-lavacli -i $(LAVA_IDENTITY) device-types add frdm-k64f
-	-lavacli -i $(LAVA_IDENTITY) devices add --type frdm-k64f --worker lava-dispatcher frdm-k64f-01
+	-lavacli -i $(LAVA_IDENTITY) devices add --type frdm-k64f --worker $(LAVA_WORKER) frdm-k64f-01
 	-lavacli -i $(LAVA_IDENTITY) devices dict set frdm-k64f-01 devices/frdm-k64f-01.jinja2
 	lavacli -i $(LAVA_IDENTITY) devices tags add frdm-k64f-01 zephyr-net
 
 	-lavacli -i $(LAVA_IDENTITY) device-types add cc3220SF
-	-lavacli -i $(LAVA_IDENTITY) devices add --type cc3220SF --worker lava-dispatcher cc3220SF-01
+	-lavacli -i $(LAVA_IDENTITY) devices add --type cc3220SF --worker $(LAVA_WORKER) cc3220SF-01
 	-lavacli -i $(LAVA_IDENTITY) devices dict set cc3220SF-01 devices/cc3220SF-01.jinja2
 	lavacli -i $(LAVA_IDENTITY) devices tags add cc3220SF-01 zephyr-net
 
 	-lavacli -i $(LAVA_IDENTITY) device-types add cc13x2-launchpad
-	-lavacli -i $(LAVA_IDENTITY) devices add --type cc13x2-launchpad --worker lava-dispatcher cc13x2-launchpad-01
+	-lavacli -i $(LAVA_IDENTITY) devices add --type cc13x2-launchpad --worker $(LAVA_WORKER) cc13x2-launchpad-01
 	-lavacli -i $(LAVA_IDENTITY) devices dict set cc13x2-launchpad-01 devices/cc13x2-launchpad-01.jinja2
 	lavacli -i $(LAVA_IDENTITY) devices tags add cc13x2-launchpad-01 zephyr-net
 
 	-lavacli -i $(LAVA_IDENTITY) device-types add disco-l475-iot1
-	-lavacli -i $(LAVA_IDENTITY) devices add --type disco-l475-iot1 --worker lava-dispatcher disco-l475-iot1-01
+	-lavacli -i $(LAVA_IDENTITY) devices add --type disco-l475-iot1 --worker $(LAVA_WORKER) disco-l475-iot1-01
 	-lavacli -i $(LAVA_IDENTITY) devices dict set disco-l475-iot1-01 devices/disco-l475-iot1-01.jinja2
 	lavacli -i $(LAVA_IDENTITY) devices tags add disco-l475-iot1-01 zephyr-net
 
