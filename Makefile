@@ -6,7 +6,7 @@ LAVA_USER = admin
 # to submit jobs, etc.
 LAVA_IDENTITY = lava-docker
 # Name of LAVA worker to which devices are registered/attached.
-LAVA_WORKER = lava-dispatcher
+LAVA_WORKER = worker0
 
 
 # sudo echo below is guaranteedly get a sudo password prompt and provide input
