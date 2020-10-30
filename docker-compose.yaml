@@ -131,7 +131,7 @@ services:
     - '/dev/serial:/dev/serial:ro' # required for serial adapters
     - '/dev/disk:/dev/disk:ro' # required for SDMux
     - worker-state:/var/lib/lava/dispatcher/worker/
-    - worker-http:/var/lib/lava/dispatcher/tmp
+    #- worker-http:/var/lib/lava/dispatcher/tmp
     - worker-tftp:/srv/tftp
     - ./test-images:/test-images:ro
      # should be mounted transitively for transitive container access to downloads
