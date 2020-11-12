@@ -192,6 +192,7 @@ services:
     devices: []
     ports:
       - 7101:7101
+      - 5000-5099:5000-5099
     networks:
       default:
         aliases:
