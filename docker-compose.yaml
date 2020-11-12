@@ -192,6 +192,8 @@ services:
     devices: []
     ports:
       - 7101:7101
+      # LITE devices port range
+      - 5000-5099:5000-5099
     networks:
       default:
         aliases:
