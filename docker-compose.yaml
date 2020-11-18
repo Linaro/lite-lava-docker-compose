@@ -50,8 +50,9 @@ services:
     - ./overlays/etc/lava-server/settings.d/02-autoregister.yaml:/etc/lava-server/settings.d/02-autoregister.yaml:ro
     depends_on:
     - db
-    - lava-publisher
     - apache2
+    - lava-publisher
+    - lava-scheduler
     environment:
       SERVICES: "gunicorn"
       BIND: "--bind lava-server:8000"
