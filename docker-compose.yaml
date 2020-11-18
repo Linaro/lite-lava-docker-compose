@@ -65,8 +65,9 @@ services:
 #      target: /usr/lib/python3/dist-packages/lava_common
     depends_on:
     - db
-    - lava-publisher
     - apache2
+    - lava-publisher
+    - lava-scheduler
     environment:
       SERVICES: "gunicorn"
       BIND: "--bind lava-server:8000"
