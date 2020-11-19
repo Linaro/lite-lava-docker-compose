@@ -126,6 +126,7 @@ services:
     - ./overlays/etc/lava-dispatcher/lava-worker:/etc/lava-dispatcher/lava-worker:ro
     - /var/run/docker.sock:/var/run/docker.sock # allow to use docker inside this container
     - /run/udev:/run/udev:ro # libudev expects it for udev events
+    - /sys/devices:/sys/devices # for udevadm trigger to work
     - /boot:/boot:ro
     - /lib/modules:/lib/modules:ro
     - '/dev/bus:/dev/bus:ro' # required for USB devices
