@@ -1,0 +1,41 @@
+# Zephyr JOB definition for lpcxpresso55s69
+device_type: 'lpcxpresso55s69'
+job_name: 'zephyr-upstream tests-subsys-logging-log_list-logging-log_list-zephyr'
+
+timeouts:
+  job:
+    minutes: 3
+  action:
+    minutes: 3
+  actions:
+    wait-usb-device:
+      seconds: 40
+
+priority: medium
+visibility: public
+
+actions:
+- deploy:
+    timeout:
+      minutes: 3
+    to: tmpfs
+    images:
+        zephyr:
+          url: "file:///test-images/lpcxpresso55s69/logging.log_list/zephyr-v2.4.0.bin"
+
+- boot:
+    method: jlink
+    timeout:
+      minutes: 1
+
+- test:
+    timeout:
+      minutes: 2
+    monitors:
+    - name: 'tests-subsys-logging-log_list-logging-log_list-zephyr'
+      start: (tc_start\(\)|starting .*test|Booting Zephyr OS)
+      end: PROJECT EXECUTION
+      pattern: (?P<result>(PASS|FAIL))\s-\s(?P<test_case_id>\w+)\r\n
+      fixupdict:
+        PASS: pass
+        FAIL: fail
