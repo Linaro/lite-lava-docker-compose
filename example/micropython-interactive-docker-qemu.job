@@ -1,4 +1,4 @@
-job_name: 'lite-aeolus-micropython #823-2ac65a24'
+job_name: 'micropython-interactive-docker-qemu.job'
 
 device_type: 'qemu'
 
@@ -27,8 +27,8 @@ actions:
     images:
         zephyr:
           image_arg: '-kernel {zephyr}'
-          url: http://snapshots.linaro.org/components/kernel/aeolus-2/micropython/pfalcon/zephyr/qemu_cortex_m3/1223/zephyr.bin
-          #url: file:///test-images/qemu_cortex_m3/micropython/zephyr.bin
+          #url: http://snapshots.linaro.org/components/kernel/aeolus-2/micropython/pfalcon/zephyr/qemu_cortex_m3/1223/zephyr.bin
+          url: file:///test-images/qemu_cortex_m3/micropython/zephyr.bin
 
 - boot:
     method: qemu
