@@ -1,6 +1,6 @@
 # This is the same job as "micropython-interactive", but uses device tags
 # to select a virtual QEMU device using QEMU from Zephyr SDK.
-job_name: 'lite-aeolus-micropython-qz #823-2ac65a24'
+job_name: 'micropython-interactive-qemu-zephyr.job'
 
 device_type: 'qemu'
 tags:
