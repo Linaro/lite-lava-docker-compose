@@ -1,4 +1,4 @@
-job_name: 'lite-aeolus-micropython #823-2ac65a24'
+job_name: 'micropython-interactive.job'
 
 device_type: 'qemu'
 
