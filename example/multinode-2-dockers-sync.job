@@ -36,7 +36,7 @@ actions:
 - test:
     role: [docker1]
     timeout:
-      seconds: 30
+      seconds: 50
 
     interactive:
     - name: boot
@@ -71,7 +71,7 @@ actions:
 - test:
     role: [docker2]
     timeout:
-      seconds: 40
+      seconds: 50
 
     interactive:
     - name: boot

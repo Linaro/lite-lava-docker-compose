@@ -69,7 +69,7 @@ actions:
 - test:
     role: [host]
     timeout:
-      seconds: 20
+      seconds: 30
 
     monitors:
     - name: host-monitor1
