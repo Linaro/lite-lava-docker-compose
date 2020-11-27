@@ -40,7 +40,8 @@ actions:
         seconds: 1200
     interactive:
     - name: 1_zephyr_banner
-      prompts: ["Booting Zephyr OS"]
+      # Experience shows that initial chars of the "Booting" message may be received garbled.
+      prompts: ["ng Zephyr OS build.+?\n"]
       script:
       # Just wait for prompt
       - command:
