@@ -1,6 +1,8 @@
 job_name: 'tfm-regression-qemu'
 
 device_type: qemu
+tags:
+- lite
 
 timeouts:
   job:
