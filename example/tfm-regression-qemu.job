@@ -44,13 +44,15 @@ actions:
       # A reasonable delay is required to pull the docker image
       seconds: 300
     monitors:
-    - name: wait-finish
+    - name: tfm-tests
       # Empty start is ok (will start with the beginning of output)
-      start: ""
+      start: "Secure image initializing"
       # Something in the last line of output
       end: "End of Non-secure test suites"
-      # Regex pattern check
-      pattern: "FAILED"
+      pattern: "Description: '(?P<test_case_id>.+?)'.+? TEST (?P<result>(PASSED|FAILED))!"
+      fixupdict:
+        PASSED: pass
+        FAILED: fail
 
 metadata:
   # For some reason, LAVA doesn't allow to query by real job name,
