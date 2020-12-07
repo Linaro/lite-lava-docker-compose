@@ -51,7 +51,15 @@ actions:
       start: "Secure image initializing"
       # Something in the last line of output
       end: "End of Non-secure test suites"
-      pattern: "Description: '(?P<test_case_id>.+?)'.+? TEST (?P<result>(PASSED|FAILED))!"
+      # <test_case_id> will capture static word "description", but at least
+      # we'll capture both both TF-M unique test ID and human-readable description.
+      # A tescase id after LAVA's cleanup will look like:
+      # tfm_sst_test_1007_description_get_interface_with_invalid_uids
+      # Note that non-greedy repetitions must be used here (and anywhere else
+      # in LAVA patterns in general), see
+      # https://github.com/Linaro/squad/issues/925#issuecomment-739141313
+      # for details.
+      pattern: "Executing '(?P<test_case_id>.+?'.+?'.+?)'.+? TEST (?P<result>(PASSED|FAILED))!"
       fixupdict:
         PASSED: pass
         FAILED: fail
