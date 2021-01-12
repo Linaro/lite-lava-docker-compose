@@ -148,4 +148,8 @@ dispatcher-shell:
 server-shell:
 	docker-compose exec lava-server bash
 
+ser2net-raspi:
+	scp ser2net/ser2net.conf root@pi-worker01.local:/etc/
+	ssh root@pi-worker01.local service ser2net restart
+
 .PHONY: all dispatcher clean
