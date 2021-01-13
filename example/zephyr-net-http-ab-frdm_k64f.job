@@ -91,3 +91,8 @@ actions:
         - message: "Complete requests: *1000\r?\nFailed requests: *0\r?\n"
 
       - lava-send: done
+
+metadata:
+  platform: frdm_k64f
+  zephyr-gcc-variant: zephyr
+  git-url: https://git.linaro.org/zephyrproject-org/zephyr.git
