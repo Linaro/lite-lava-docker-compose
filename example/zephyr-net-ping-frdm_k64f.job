@@ -108,3 +108,8 @@ actions:
         - message: "1000 packets transmitted, 1000 received, 0% packet loss"
 
       - lava-send: done
+
+metadata:
+  platform: frdm_k64f
+  zephyr-gcc-variant: zephyr
+  git-url: https://git.linaro.org/zephyrproject-org/zephyr.git
