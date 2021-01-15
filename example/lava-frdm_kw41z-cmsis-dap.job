@@ -1,0 +1,52 @@
+# Zephyr job definition for frdm-kw41z
+device_type: frdm-kw41z
+job_name: 'zephyr-upstream tests-subsys-logging-log_list-logging-log_list-zephyr'
+
+timeouts:
+  job:
+    minutes: 3
+  action:
+    minutes: 3
+  actions:
+    wait-usb-device:
+      seconds: 40
+
+priority: medium
+visibility: public
+
+actions:
+- deploy:
+    timeout:
+      minutes: 3
+    to: tmpfs
+    images:
+        zephyr:
+          url: "file:///test-images/frdm_kw41z/logging.log_list/zephyr.bin"
+          #url: "http://snapshots.linaro.org/components/kernel/zephyr/master/zephyr/frdm_kw41z/5853/tests/subsys/logging/log_list/logging.log_list/zephyr/zephyr.bin"
+
+- boot:
+    method: cmsis-dap
+    failure_retry: 3
+    timeout:
+      minutes: 1
+
+- test:
+    timeout:
+      minutes: 2
+    monitors:
+    - name: 'tests-subsys-logging-log_list-logging-log_list-zephyr'
+      start: (tc_start\(\)|starting .*test|Booting Zephyr OS)
+      end: PROJECT EXECUTION
+      pattern: (?P<result>(PASS|FAIL))\s-\s(?P<test_case_id>\w+)\r\n
+      fixupdict:
+        PASS: pass
+        FAIL: fail
+
+metadata:
+  build-url: https://ci.linaro.org/job/zephyr-upstream/PLATFORM=frdm_k64f,ZEPHYR_TOOLCHAIN_VARIANT=zephyr,label=docker-xenial-amd64-13/3708/
+  build-log: https://ci.linaro.org/job/zephyr-upstream/PLATFORM=frdm_k64f,ZEPHYR_TOOLCHAIN_VARIANT=zephyr,label=docker-xenial-amd64-13/3708//consoleText
+  zephyr-gcc-variant: zephyr
+  platform: frdm_kw41z
+  git-url: https://git.linaro.org/zephyrproject-org/zephyr.git
+  git-commit: xxx
+
