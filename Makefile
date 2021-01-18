@@ -150,6 +150,6 @@ server-shell:
 
 ser2net-raspi:
 	scp ser2net/ser2net.conf root@pi-worker01.local:/etc/
-	ssh root@pi-worker01.local service ser2net restart
+	ssh root@pi-worker01.local "service ser2net stop; service ser2net start"
 
 .PHONY: all dispatcher clean
