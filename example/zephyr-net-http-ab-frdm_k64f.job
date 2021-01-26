@@ -33,6 +33,7 @@ actions:
 - boot:
     role: [device]
     method: cmsis-dap
+    failure_retry: 3
 
 - test:
     role: [device]
