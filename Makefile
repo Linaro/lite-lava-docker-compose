@@ -124,6 +124,10 @@ lava-boards:
 	-lavacli -i $(LAVA_IDENTITY) devices dict set frdm-k64f-01 devices/frdm-k64f-01.jinja2
 	lavacli -i $(LAVA_IDENTITY) devices tags add frdm-k64f-01 zephyr-net
 
+	-lavacli -i $(LAVA_IDENTITY) device-types add frdm-kw41z
+	-lavacli -i $(LAVA_IDENTITY) devices add --type frdm-kw41z --worker $(LAVA_WORKER) frdm-kw41z-01
+	-lavacli -i $(LAVA_IDENTITY) devices dict set frdm-kw41z-01 devices/frdm-kw41z-01.jinja2
+
 	-lavacli -i $(LAVA_IDENTITY) device-types add cc3220SF
 	-lavacli -i $(LAVA_IDENTITY) devices add --type cc3220SF --worker $(LAVA_WORKER) cc3220SF-01
 	-lavacli -i $(LAVA_IDENTITY) devices dict set cc3220SF-01 devices/cc3220SF-01.jinja2
