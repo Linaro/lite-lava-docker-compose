@@ -123,10 +123,9 @@ services:
     image: httpd
     volumes:
     - ./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+    - worker-http:/var/lib/lava/dispatcher/tmp
     ports:
       - 80
-    volumes:
-      - worker-http:/var/lib/lava/dispatcher/tmp
 
   lava-dispatcher-tftpd:
     build:
