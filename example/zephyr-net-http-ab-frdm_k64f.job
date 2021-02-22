@@ -32,7 +32,7 @@ actions:
 
 - boot:
     role: [device]
-    method: cmsis-dap
+    method: pyocd
     failure_retry: 3
 
 - test:
