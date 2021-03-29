@@ -80,7 +80,7 @@ actions:
 - test:
     role: [host]
     timeout:
-      seconds: 60
+      seconds: 90
     interactive:
     - name: ping
       prompts: ["/# ", "/ # "]
