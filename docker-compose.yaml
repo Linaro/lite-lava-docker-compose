@@ -68,6 +68,7 @@ services:
     - apache2
     - lava-publisher
     - lava-scheduler
+    - lava-coordinator
     environment:
       SERVICES: "gunicorn"
       BIND: "--bind lava-server:8000"
