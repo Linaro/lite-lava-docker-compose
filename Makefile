@@ -17,6 +17,10 @@ all:
 	sudo contrib/udev-forward.py -i lava-dispatcher &
 	docker-compose up
 
+lava-server:
+	docker-compose build lava-server
+	docker-compose up lava-server
+
 lava-dispatcher:
 	docker-compose build lava-dispatcher
 	docker-compose up lava-dispatcher
