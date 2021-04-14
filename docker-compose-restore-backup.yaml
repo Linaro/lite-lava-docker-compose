@@ -1,0 +1,5 @@
+version: "3.4"
+services:
+  db:
+    volumes:
+    - ./initdb.d:/docker-entrypoint-initdb.d
