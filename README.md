@@ -71,6 +71,36 @@ docker-compose will also create some volumes for:
 * dispatcher httpd
 * dispatcher tftpd
 
+Backup/restore of the database
+------------------------------
+
+## Backup
+Create the sql backup file:
+
+    docker exec --user postgres docker-compose_db_1 bash -c \
+                "pg_dump --username=lavaserver lavaserver > /tmp/lavaserver.sql"
+
+Then retrieve it on host:
+
+    docker cp docker-compose_db_1:/tmp/lavaserver.sql .
+
+## Restore
+In order to restore an instance from a backup, first delete the db container
+and its associated volume:
+
+    docker-compose stop
+    docker container rm docker-compose_db_1; docker volume rm lava-server-pgdata
+
+Then place the .sql (or .sql.gz) file in initdb.d/ folder:
+
+    docker-compose -f docker-compose.yaml -f docker-compose-restore-backup.yaml up -d
+
+The file docker-compose-restore-backup.yaml mounts an extra volume in postgres
+container, in /docker-entrypoint-initdb.d
+References:
+- [postgres docker documentation](https://registry.hub.docker.com/_/postgres/)
+- [postgres docker entrypoint script](https://github.com/docker-library/postgres/blob/master/docker-entrypoint.sh)
+
 
 Standalone dispatcher container
 -------------------------------
