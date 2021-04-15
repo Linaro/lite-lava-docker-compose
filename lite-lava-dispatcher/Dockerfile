@@ -15,7 +15,7 @@ RUN apt-get update && \
         python3-pip libusb-1.0.0 vim wget lava-coordinator && \
         apt-get -y install libudev1 && \
         pip3 install --upgrade setuptools && \
-        pip3 install -U git+https://github.com/mbedmicro/pyOCD && \
+        pip3 install -U pyocd==0.29.0 && \
         wget --no-check-certificate --post-data="accept_license_agreement=accepted&non_emb_ctr=confirmed&submit=Download+software" ${JLINK_URL} -O ${JLINK_DEB} && \
         apt-get -y install libncurses5 && \
         dpkg -i ${JLINK_DEB} && \
