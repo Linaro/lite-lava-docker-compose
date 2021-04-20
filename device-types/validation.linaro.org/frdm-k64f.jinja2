@@ -33,6 +33,7 @@ actions:
           - -d {{ debug|default('debug') }}
           - -t k64f
           - -f 3000000
+          - -O connect_mode=under-reset
       cmsis-dap:
         parameters:
           usb_mass_device: '{{ usb_mass_device|default('/notset') }}'
