@@ -42,6 +42,7 @@ services:
     volumes:
     - device-types:/etc/lava-server/dispatcher-config/device-types
     - devices:/etc/lava-server/dispatcher-config/devices
+    - dispatcher-config:/etc/lava-server/dispatcher.d
     - health-checks:/etc/lava-server/dispatcher-config/health-checks
     - joboutput:/var/lib/lava-server/default/media/job-output
     - ./overlays/etc/lava-server/settings.d/01-database.yaml:/etc/lava-server/settings.d/01-database.yaml:ro
@@ -179,6 +180,8 @@ volumes:
     name: lava-server-device-types
   devices:
     name: lava-server-devices
+  dispatcher-config:
+    name: lava-server-dispatcher-config
   health-checks:
     name: lava-server-health-checks
   joboutput:
