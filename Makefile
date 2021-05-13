@@ -55,6 +55,7 @@ board-configs:
 
 # Make any preparation steps (currently none) and build docker-compose images.
 build:
+	docker-compose pull
 	docker-compose build
 
 install:
