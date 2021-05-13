@@ -32,6 +32,7 @@ Using it
 
 In order to start the containers, run:
 
+    docker-compose pull
     docker-compose build
     docker-compose up
 
@@ -59,6 +60,15 @@ docker-compose will also create some volumes for:
 * PostgreSQL data
 * dispatcher httpd
 * dispatcher tftpd
+
+Updating to new LAVA version
+----------------------------
+
+Newer LAVA versions are pulished regularly as docker images. To update to
+the latest images (in the project directory):
+
+    git pull
+    docker-compose pull
 
 Backup/restore of the database
 ------------------------------
