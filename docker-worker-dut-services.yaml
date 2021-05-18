@@ -1,0 +1,53 @@
+version: "3.4"
+services:
+  lava-dispatcher-tftpd:
+    build:
+      context: ./tftpd
+    environment:
+      http_proxy: "${http_proxy}"
+      https_proxy: "${https_proxy}"
+      ftp_proxy: "${ftp_proxy}"
+    restart: unless-stopped
+    ports:
+        - 69:69/udp
+    volumes:
+      - /srv/tftp:/srv/tftp
+
+  lava-dispatcher-ser2net:
+    build:
+      context: ./ser2net
+    environment:
+      http_proxy: "${http_proxy}"
+      https_proxy: "${https_proxy}"
+      ftp_proxy: "${ftp_proxy}"
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - '/dev/serial:/dev/serial' # required for serial adapters
+      - '/dev:/dev'
+      - './ser2net/ser2net.conf:/etc/ser2net.conf'
+    devices: []
+    # Use host network so that devices with new port can be added
+    # without adding per device port mapping in the compose file.
+    # Once new device added in 'ser2net/ser2net.conf', restart ser2net
+    # service or the container to load the changes.
+    # restart ser2net: docker exec docker-compose_lava-dispatcher-ser2net_1 service ser2net restart
+    network_mode: host
+
+  lava-dispatcher-nfs:
+    build:
+      context: ./nfs
+    environment:
+      http_proxy: "${http_proxy}"
+      https_proxy: "${https_proxy}"
+      ftp_proxy: "${ftp_proxy}"
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - /var/lib/lava/dispatcher/tmp:/var/lib/lava/dispatcher/tmp
+    ports:
+      - 111:111
+      - 111:111/udp
+      - 2049:2049
+      - 2049:2049/udp
+      - 35543:35543
