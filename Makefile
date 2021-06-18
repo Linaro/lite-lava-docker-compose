@@ -56,6 +56,9 @@ board-configs:
 # Make any preparation steps (currently none) and build docker-compose images.
 build:
 	docker-compose pull
+	# Explicitly pull dispatcher image FROM which we build our own.
+	# Otherwise docker-compose doesn't do that itself.
+	docker pull lavasoftware/lava-dispatcher:latest
 	docker-compose build
 
 install:
