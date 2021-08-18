@@ -59,7 +59,7 @@ actions:
       # in LAVA patterns in general), see
       # https://github.com/Linaro/squad/issues/925#issuecomment-739141313
       # for details.
-      pattern: "Executing '(?P<test_case_id>.+?'.+?'.+?)'.+? TEST (?P<result>(PASSED|FAILED))!"
+      pattern: "Executing '(?P<test_case_id>.+?'.+?'.+?)'.+? TEST: (.+? -) (?P<result>(PASSED|FAILED))!"
       fixupdict:
         PASSED: pass
         FAILED: fail
