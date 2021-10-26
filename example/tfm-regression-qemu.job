@@ -30,8 +30,8 @@ actions:
     images:
         tfm:
           image_arg: '-device loader,file={tfm}'
-          #url: 'file:///test-images/qemu_mps2_an521/tfm/tfm_full_b157dca4.hex'
-          url: https://people.linaro.org/~kevin.townsend/lava/an521_tfm_full.hex
+          url: 'file:///test-images/qemu_mps2_an521/tfm/tfm_full_d3c5cd90.hex'
+          #url: https://people.linaro.org/~kevin.townsend/lava/an521_tfm_full.hex
 
 - boot:
     method: qemu
